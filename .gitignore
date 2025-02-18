@@ -87,3 +87,8 @@ crashlytics-build.properties
 # Image
 *.png
 *.jpg
+
+# Specific folders
+/.idea
+/.utmp
+/Packages
