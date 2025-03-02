@@ -57,7 +57,7 @@ namespace PlatformingGame.Controller
             }
         }
         
-        private void Awake()
+        public override void Awake()
         {
             base.Awake();
             _rb = GetComponent<Rigidbody2D>();
