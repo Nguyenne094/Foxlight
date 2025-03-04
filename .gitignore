@@ -92,5 +92,4 @@ crashlytics-build.properties
 /.idea
 /.utmp
 /Packages
-/Art
-/Animations
+Asset/Art
