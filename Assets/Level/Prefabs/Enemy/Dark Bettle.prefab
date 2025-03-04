@@ -33,7 +33,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.29, y: -1.92, z: 0}
-  m_LocalScale: {x: 1.5079, y: 0.7643624, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5797084606692022253}
@@ -80,15 +80,15 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -685130799
+  m_SortingLayer: 3
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.7647059, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: -801978411, guid: 9d4810a8b7d7ead48910288f88ed4f19, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -132,13 +132,13 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
+    oldSize: {x: 2.34, y: 1.3}
+    newSize: {x: 5.12, y: 5.12}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.34, y: 1.3}
   m_EdgeRadius: 0
 --- !u!50 &2550195339775004287
 Rigidbody2D:
@@ -277,6 +277,7 @@ MonoBehaviour:
   _targetLayer:
     serializedVersion: 2
     m_Bits: 512
+  _isInvincible: 0
   OnTakeDamage: {fileID: 11400000, guid: c7d0a212c12edfe48be54af7c08fa93e, type: 2}
   OnDeath: {fileID: 11400000, guid: 890ef77d419a1394eafd9eea0f9b3c41, type: 2}
 --- !u!114 &7521237755249886260
@@ -292,7 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collider: {fileID: 950679890741173922}
-  _detectDistance: 1
+  _detectDistance: 1.3
   _filter2D:
     useTriggers: 0
     useLayerMask: 1
@@ -356,7 +357,7 @@ Transform:
   m_GameObject: {fileID: 3777530924948140803}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.606, y: -0.599, z: 0}
+  m_LocalPosition: {x: 1.44, y: -0.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

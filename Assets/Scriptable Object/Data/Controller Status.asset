@@ -14,27 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 5
   MoveSpeedWhenPushObject: 1.5
-  ObjectMask:
-    serializedVersion: 2
-    m_Bits: 128
   JumpHeight: 20
   FallMultiplier: 3
   NormalMultiplier: 5
   MaxFallSpeed: 10
-  ContactFilter2D:
+  GroundFilter:
     useTriggers: 0
-    useLayerMask: 0
+    useLayerMask: 1
     useDepth: 0
     useOutsideDepth: 0
     useNormalAngle: 0
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 64
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  DashForce: 10
-  DashDuration: 0.25
-  DashDelay: 1
+  RollForce: 10
+  RollDuration: 0.55
+  RollDelay: 2
+  IgnoreLayerWhenDash:
+    serializedVersion: 2
+    m_Bits: 1281

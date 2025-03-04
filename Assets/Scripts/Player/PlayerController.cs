@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Bap.System.Health;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Utilities;
@@ -30,6 +31,7 @@ namespace PlatformingGame.Controller
         private Rigidbody2D _rb;
         private Collider2D _col;
         private Animator _animator;
+        private Player _player;
         private FacingDirection _facingDirection = FacingDirection.Right;
         
         private bool _isMoving = false;
@@ -60,6 +62,7 @@ namespace PlatformingGame.Controller
         public override void Awake()
         {
             base.Awake();
+            _player = GetComponent<Player>();
             _rb = GetComponent<Rigidbody2D>();
             _col = GetComponent<Collider2D>();
             _animator = GetComponent<Animator>();
@@ -128,14 +131,28 @@ namespace PlatformingGame.Controller
 
         private IEnumerator DashCoroutine()
         {
-            StartCoroutine(DashCooldown(_colStat.DashDelay));
-            _isDashing = true;
+            StartCoroutine(DashCooldown(_colStat.RollDelay));
             _animator.SetTrigger(PlayerAnimationString.TriggerDash);
-            float dashSpeed = (int)_facingDirection * _colStat.DashForce;
+            _isDashing = true;
+            _player.IsInvincible = true;
+            
+            //Ignore Layer
+            Physics2D.IgnoreLayerCollision(gameObject.layer, 0, true);
+            Physics2D.IgnoreLayerCollision(gameObject.layer, 8, true);
+            Physics2D.IgnoreLayerCollision(gameObject.layer, 10, true);
+            
+            float dashSpeed = (int)_facingDirection * _colStat.RollForce;
+            _rb.linearVelocity = new Vector2(0, _rb.linearVelocityY);
             _rb.linearVelocity = new Vector2(dashSpeed, _rb.linearVelocity.y);
 
-            yield return new WaitForSeconds(_colStat.DashDuration);
+            yield return new WaitForSeconds(_colStat.RollDuration);
             
+            //Resest Ignore Layer
+            Physics2D.IgnoreLayerCollision(gameObject.layer, 0, false);
+            Physics2D.IgnoreLayerCollision(gameObject.layer, 8, false);
+            Physics2D.IgnoreLayerCollision(gameObject.layer, 10, false);
+            
+            _player.IsInvincible = false;
             _isDashing = false;
         }
 
@@ -149,7 +166,7 @@ namespace PlatformingGame.Controller
         private bool IsGround()
         {
             RaycastHit2D[] hits = new RaycastHit2D[1];
-            return _col.Cast(Vector2.down, _colStat.ContactFilter2D, hits, 0.02f) > 0;
+            return _col.Cast(Vector2.down, _colStat.GroundFilter, hits, 0.02f) > 0;
         }
 
         private void SetFacingDirection(int moveInput)

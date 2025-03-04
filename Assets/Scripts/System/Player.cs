@@ -12,6 +12,8 @@ namespace Bap.System.Health
         [SerializeField] private VoidEventChannelSO OnDeath;
 
         private bool _isInvincible = false;
+
+        public bool IsInvincible { get; set; }
         
         public override void TakeDamage(int value)
         {
