@@ -4,28 +4,37 @@ using System.Collections.Generic;
 using Bap.System.Health;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using Utilities;
 
 namespace PlatformingGame.Controller
 {
     public class PlayerController : Singleton<PlayerController>
     {
-        //TODO: Anti Gravity Apex
-        //TODO: Early Fall
-        //TODO: Jump Buffering
-        //TODO: Sticky Feet On Land
-        //TODO: Speed Apex
-        //TODO: Coyote time
-        //TODO: Clamp Falling Speed
-        //TODO: Catch Miss Jump
-        //TODO: Bumped Head Correction
-        //TODO: Corner Clip On Jump
-        //TODO: Hold Crunch On Stay On Ledge
-        //TODO: Relaxed Semi-Solid
-        //TODO: Variable Jump Height
-
+        [Header("References")]
         [SerializeField] private ControllerStatSO _colStat;
         [SerializeField] private JoyStick _joyStick;
+        
+        [Header("Movement")]
+        [SerializeField] private bool _isMoving = false;
+        [SerializeField] private int _moveInput;
+        
+        [Header("Rolling")]
+        [SerializeField] private bool _isDashing = false;
+        [SerializeField] private bool _canDash = true;
+
+        [Header("Jumping")] 
+        [SerializeField] private bool _onGround;
+        
+        [SerializeField, Tooltip("True while Player pressed jump and on ground before character is in air")] 
+        private bool _isJumping;
+        [SerializeField, Tooltip("If velocity y lower than 0")]
+        private bool _isFalling;
+        [SerializeField] private int _yVelocityDirection;
+        [SerializeField, Tooltip("Period of time character is jumping, not fall. It resets to zero while peaking (y velocity = 0)")] 
+        
+        private float _computedGravity;
+        private float _jumpVelocity;
         
         
         private Rigidbody2D _rb;
@@ -33,30 +42,57 @@ namespace PlatformingGame.Controller
         private Animator _animator;
         private Player _player;
         private FacingDirection _facingDirection = FacingDirection.Right;
-        
-        private bool _isMoving = false;
-        private bool _isDashing = false;
-        private bool _canDash = true;
-        
-        private int _moveInput;
-        
-        private enum FacingDirection
-        {
-            Right = 1,
-            Left = -1
-        }
-        
+
+        #region Properties
+
         public bool IsMoving
         {
             get
             {
                 return _isMoving;
             }
-            private set
+            set
             {
                 _isMoving = value;
                 _animator.SetBool(PlayerAnimationString.IsWalking, _isMoving);
             }
+        }
+
+        public bool IsJumping
+        {
+            get
+            {
+                return _isJumping;
+            }
+            set
+            {
+                _isJumping = value;
+            }
+        }
+
+        public bool OnGround
+        {
+            get
+            {
+                return _onGround;
+            }
+            private set
+            {
+                _onGround = value;
+                if (_onGround)
+                {
+                    IsJumping = false;
+                }
+                _animator.SetBool(PlayerAnimationString.OnGrounded, _onGround);
+            }
+        }
+        
+        #endregion
+        
+        private enum FacingDirection
+        {
+            Right = 1,
+            Left = -1
         }
         
         public override void Awake()
@@ -70,7 +106,7 @@ namespace PlatformingGame.Controller
 
         private void Update()
         {
-            _animator.SetBool(PlayerAnimationString.OnGrounded, IsGround());
+            GroundCheck();
             Move();
             ModifyJump();
         }
@@ -82,26 +118,7 @@ namespace PlatformingGame.Controller
                 _rb.linearVelocity = new Vector2(_moveInput * _colStat.MoveSpeed, _rb.linearVelocity.y);
             }
         }
-
-        private void ModifyJump()
-        {
-            //Fall and normal gravity
-            if (_rb.linearVelocityY < 0)
-            {
-                _rb.gravityScale = _colStat.FallMultiplier;
-            }
-            else
-            {
-                _rb.gravityScale = _colStat.NormalMultiplier;
-            }
-            
-            //Clamp falling speed
-            if (_rb.linearVelocity.y < -_colStat.MaxFallSpeed)
-            {
-                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, -_colStat.MaxFallSpeed);
-            }
-        }
-
+        
         public void Move()
         {
             _moveInput = _joyStick.GetNormalizedHorizontalMovement();
@@ -111,13 +128,41 @@ namespace PlatformingGame.Controller
             SetFacingDirection(_moveInput);
         }
 
+        private void ModifyJump()
+        {
+            // ConfigGravity();
+            ComputePhysicsParameters();
+            RestrictFallinSpeed();
+        }
+
+        private void RestrictFallinSpeed()
+        {
+            if (_rb.linearVelocity.y < -_colStat.MaxFallSpeed)
+            {
+                _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, -_colStat.MaxFallSpeed);
+            }
+        }
+
+        void ComputePhysicsParameters()
+        {
+            // Công thức tính: g = (2 * jumpHeight) / (jumpDuration^2)
+            _computedGravity = (2 * _colStat.JumpHeight) / (_colStat.JumpDuration * _colStat.JumpDuration);
+            // Vận tốc ban đầu: v0 = g * jumpDuration = 2 * jumpHeight / jumpDuration
+            _jumpVelocity = _computedGravity * _colStat.JumpDuration;
+
+            // Trong Unity, Physics2D.gravity mặc định là (0, -9.81).
+            // Để nhân vật có gia tốc trọng lực hiệu dụng gia tốc computedGravity (hướng âm),
+            // ta cập nhật gravityScale:
+            _rb.gravityScale = _computedGravity / Mathf.Abs(Physics2D.gravity.y);
+        }
+
         public void Jump(InputAction.CallbackContext ctx)
         {
-            if (ctx.started && IsGround())
+            if (ctx.started && OnGround)
             {
-                float jumpVel = Mathf.Sqrt(2 * -Physics2D.gravity.y * _colStat.JumpHeight);
+                IsJumping = true;
 
-                _rb.linearVelocityY = jumpVel;
+                _rb.linearVelocityY = _jumpVelocity;
             }
         }
 
@@ -138,7 +183,6 @@ namespace PlatformingGame.Controller
             
             //Ignore Layer
             Physics2D.IgnoreLayerCollision(gameObject.layer, 0, true);
-            Physics2D.IgnoreLayerCollision(gameObject.layer, 8, true);
             Physics2D.IgnoreLayerCollision(gameObject.layer, 10, true);
             
             float dashSpeed = (int)_facingDirection * _colStat.RollForce;
@@ -149,7 +193,6 @@ namespace PlatformingGame.Controller
             
             //Resest Ignore Layer
             Physics2D.IgnoreLayerCollision(gameObject.layer, 0, false);
-            Physics2D.IgnoreLayerCollision(gameObject.layer, 8, false);
             Physics2D.IgnoreLayerCollision(gameObject.layer, 10, false);
             
             _player.IsInvincible = false;
@@ -163,10 +206,10 @@ namespace PlatformingGame.Controller
             _canDash = true;
         }
 
-        private bool IsGround()
+        private void GroundCheck()
         {
             RaycastHit2D[] hits = new RaycastHit2D[1];
-            return _col.Cast(Vector2.down, _colStat.GroundFilter, hits, 0.02f) > 0;
+            OnGround = _col.Cast(Vector2.down, _colStat.GroundFilter, hits, _colStat.GroundCheckDistance) > 0;
         }
 
         private void SetFacingDirection(int moveInput)
@@ -182,6 +225,15 @@ namespace PlatformingGame.Controller
                     _facingDirection = FacingDirection.Left;
                 }
                 transform.localScale = new Vector2(Mathf.Abs(transform.localScale.x) * (int)_facingDirection, transform.localScale.y);
+            }
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            if (_col)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawLine(_col.bounds.center + new Vector3(0, -_col.bounds.size.y/2), _col.bounds.center + new Vector3(0, -_col.bounds.size.y/2 - _colStat.GroundCheckDistance));
             }
         }
     }

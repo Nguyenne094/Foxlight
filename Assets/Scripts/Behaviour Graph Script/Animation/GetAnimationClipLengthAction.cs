@@ -14,7 +14,6 @@ public partial class GetAnimationClipLengthAction : Action
     protected override Status OnStart()
     {
         Variable.Value = Self.Value.GetComponent<Animator>().GetCurrentAnimatorClipInfo(0)[0].clip.length;
-        
         return Status.Success;
     }
 }

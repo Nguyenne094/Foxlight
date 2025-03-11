@@ -16,8 +16,8 @@ TagManager:
   - Enemy
   - Player
   - Injury To Enemy
-  - 
-  - 
+  - Enemy Hurt Box
+  - Can't Go Through
   - 
   - 
   - 
@@ -38,17 +38,23 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Obstacle
+    uniqueID: 899141465
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Obstacle
-    uniqueID: 2735548779
+  - name: Background
+    uniqueID: 166676489
     locked: 0
-  - name: Player
-    uniqueID: 4157290999
+  - name: Content
+    uniqueID: 3412986289
     locked: 0
   - name: Enemy
     uniqueID: 3609836497
+    locked: 0
+  - name: Player
+    uniqueID: 1000742333
     locked: 0
   - name: Forground
     uniqueID: 1865824907

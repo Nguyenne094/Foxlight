@@ -10,7 +10,6 @@ using Unity.Properties;
 public partial class MoveTargetJoint2DToAPositionAction : Action
 {
     [SerializeReference] public BlackboardVariable<MoveTargetJoint2DToPosition> MoveAnchorToPosition;
-    [SerializeReference] public BlackboardVariable<bool> Restart;
 
     protected override Status OnStart()
     {
@@ -27,19 +26,11 @@ public partial class MoveTargetJoint2DToAPositionAction : Action
     {
         if (MoveAnchorToPosition.Value.ReachEndPos)
         {
-            if (Restart)
-            {
-                MoveAnchorToPosition.Value.Restart();
-            }
-            else
-            {
-                return Status.Success;
-            }
+            MoveAnchorToPosition.Value.Restart();
+            return Status.Success;
         }
-        else
-        {
-            MoveAnchorToPosition.Value.Move();
-        }
+        
+        MoveAnchorToPosition.Value.Move();
 
         return Status.Running;
     }

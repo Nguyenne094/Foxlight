@@ -7,10 +7,11 @@ namespace Utilities
 {
     /// <summary>
     /// GameObject pools itself when disabled.
+    /// You must initilize ObjectPool Parent and its event functions 
     /// </summary>
     public class PoolableObject : MonoBehaviour
     {
-        public ObjectPool<GameObject> Parent;
+        public static ObjectPool<GameObject> Parent;
         public event Action OnRelease;
 
         private bool isReleased;

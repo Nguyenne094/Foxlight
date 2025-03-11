@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Utilities;
@@ -44,12 +43,17 @@ public class MoveTargetJoint2DThroughList : MonoBehaviour
 
     public void MoveThroughPosList()
     {
+        if (ReachEndPos)
+        {
+            Restart();
+        }
+        
         if (Vector2.Distance(_targetJoint2D.target, _nextPos) <= _threshold)
         {
             if (_currentIndex == _posList.Length-1)
             {
                 ReachEndPos = true;
-               _posList = _posList.Reverse().ToArray();//Because of Reverse of LinQ return a list or array without changing the original
+               // _posList = _posList.Reverse().ToArray();//Because of Reverse of LinQ return a list or array without changing the original
             }
             else
             {
@@ -60,6 +64,7 @@ public class MoveTargetJoint2DThroughList : MonoBehaviour
         else
         {
             _targetJoint2D.target = Vector3.MoveTowards(_targetJoint2D.target, _nextPos, _speed * Time.deltaTime);
+            // _targetJoint2D.target = Vector3.Slerp(_targetJoint2D.target, _nextPos, _speed * Time.deltaTime);
         }
     }
 

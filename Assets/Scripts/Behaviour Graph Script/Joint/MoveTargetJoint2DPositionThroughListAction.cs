@@ -28,14 +28,7 @@ public partial class MoveTargetJoint2DPositionThroughListAction : Action
         MoveAnchorThroughList.Value.MoveThroughPosList();
         if (MoveAnchorThroughList.Value.ReachEndPos)
         {
-            if (Restart)
-            {
-                MoveAnchorThroughList.Value.Restart();
-            }
-            else
-            {
-                return Status.Success;
-            }
+            return Status.Success;
         }
 
         return Status.Running;

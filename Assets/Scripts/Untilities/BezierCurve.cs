@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Utilities
@@ -12,12 +14,14 @@ namespace Utilities
         private void OnDrawGizmos()
         {
             if (_point1 && _point2 && _point3)
-            {
+            { 
+                Vector3[] positionList = new Vector3[11];
                 for (int i = 0; i <= 10; i++)
                 {
                     float percent = i / 10f;
-                    Gizmos.DrawSphere(GetPosition(percent), 0.2f);
+                    positionList[i] = GetPosition(percent);
                 }
+                Gizmos.DrawLineStrip(positionList, false);
             }
         }
 

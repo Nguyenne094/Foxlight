@@ -1,26 +1,58 @@
 ﻿using System;
+using System.Collections;
+using System.Reflection;
+using Bap.Pool;
 using Bap.System.Health;
+using DG.Tweening;
 using UnityEngine;
-using Others;
 
 namespace Others
 {
     public class Log : MonoBehaviour
     {
+        [SerializeField] private LogPool _pool;
         [SerializeField] private Lever _lever;
-        [SerializeField] private int _damage;
-        [SerializeField, Min(0), Tooltip("Target gets damage if fall velocity (Y) lower than threshold. Threshold is seted negative in code")] 
+        [SerializeField] private ParticleSystem _particleSystem;
+        [SerializeField] private LayerMask _interactiveLayer;
+        [SerializeField, Min(0), Tooltip("Target gets damage if fall velocity (Y) lower than threshold. Threshold is seted negative in code")]
         private float _threshold;
+        [SerializeField] private int _damage;
+        [SerializeField] private float _recreateAfter;
         
-
+        private Vector2 _initialPosition;
+        private Vector3 _initialRotation;
+        private bool _isTriggered;
         private Rigidbody2D _rb;
+        private SpriteRenderer _spriteRenderer;
+        private Collider2D _collider;
+
+        public float RecreateAfter => _recreateAfter;
         
         private void Awake()
         {
             _rb = GetComponent<Rigidbody2D>();
+            if (!_pool)
+            {
+                _pool = FindFirstObjectByType<LogPool>();
+                if(!_pool)
+                    Debug.LogError("Log Pool don't exist");
+            }
+            if (!_particleSystem)
+            {
+                _particleSystem = GetComponentInChildren<ParticleSystem>();
+            }
+
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+            _collider = GetComponent<Collider2D>();
             
             _lever.OnActive += DropLog;
-            _rb.bodyType = RigidbodyType2D.Static;
+            _initialPosition = transform.position;
+            _initialRotation = transform.eulerAngles;
+        }
+        
+        private void OnEnable()
+        {
+            RestartState();
         }
 
         private void DropLog()
@@ -28,31 +60,36 @@ namespace Others
             _rb.bodyType = RigidbodyType2D.Dynamic;
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
+        private void RestartState()
+        {
+            transform.position = _initialPosition;
+            transform.eulerAngles = _initialRotation;
+            _spriteRenderer.enabled = true;
+            _rb.bodyType = RigidbodyType2D.Static;
+            _isTriggered = false;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
         {
             if (_rb.linearVelocityY > -_threshold &&
                 other.gameObject.TryGetComponent<Health>(out Health health))
             {
                 health.TakeDamage(_damage);
-                FallIntoTarget();
+            }
+            if (((((1 << other.gameObject.layer) & _interactiveLayer.value) != 0)) && !_isTriggered)
+            {
+                ReadyToDisable();
+                _isTriggered = true;
             }
         }
 
-        private void FallIntoTarget()
+        private void ReadyToDisable()
         {
-            Animator animator = GetComponent<Animator>();
-            animator.SetTrigger("Break");
-            GetComponent<Collider2D>().isTrigger = true;
-            Destroy(this.gameObject, animator.GetCurrentAnimatorClipInfo(0).Length);
+            Debug.Log("Collide");
+            _spriteRenderer.enabled = false;
+            _rb.bodyType = RigidbodyType2D.Static;
+            _particleSystem.Play();
+            DOVirtual.DelayedCall(_particleSystem.main.startLifetime.constant, () => _pool.Release(this));
         }
-
-        // private void OnTriggerEnter2D(Collider2D other)
-        // {
-        //     if (_rb.linearVelocityY < _threshold &&
-        //         other.TryGetComponent<Health>(out Health health))
-        //     {
-        //         health.TakeDamage(_damage);
-        //     }
-        // }
     }
 }

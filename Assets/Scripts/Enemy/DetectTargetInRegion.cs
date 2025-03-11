@@ -1,4 +1,5 @@
 ﻿using System;
+using Bap.System.Health;
 using UnityEngine;
 
 namespace Enemy
@@ -12,7 +13,11 @@ namespace Enemy
         {
             if (!_target)
             {
-                Debug.LogError(gameObject.name + ": Missing ref to Target to detect");
+                _target = FindFirstObjectByType<Player>().transform;
+                if (!_target)
+                {
+                    Debug.LogError("Player is not in current scene!!!");
+                }
             }
         }
 

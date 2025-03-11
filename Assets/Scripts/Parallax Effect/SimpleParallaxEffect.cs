@@ -1,4 +1,5 @@
 using System;
+using Bap.System.Health;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
@@ -25,6 +26,11 @@ public class SimpleParallaxEffect : MonoBehaviour
             {
                 Debug.LogError("<color: red>Camera not found</color>");
             }
+        }
+
+        if (_subject == null)
+        {
+            _subject = FindFirstObjectByType<Player>().transform;
         }
 
         lastCameraPosition = _mainCamera.transform.position;

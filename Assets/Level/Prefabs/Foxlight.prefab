@@ -319,6 +319,15 @@ MonoBehaviour:
   Persist: 1
   _colStat: {fileID: 11400000, guid: 7e112c3c732dca940a1d3205da3e69d2, type: 2}
   _joyStick: {fileID: 0}
+  _isMoving: 0
+  _moveInput: 0
+  _isDashing: 0
+  _canDash: 1
+  _onGround: 1
+  _isJumping: 0
+  _isFalling: 0
+  _yVelocityDirection: 0
+  _computedGravity: 0
 --- !u!114 &6720268081683883933
 MonoBehaviour:
   m_ObjectHideFlags: 0

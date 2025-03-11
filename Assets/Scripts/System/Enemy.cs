@@ -36,18 +36,6 @@ namespace Bap.System.Health
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D other)
-        {
-            if (((1 << other.gameObject.layer) & _targetLayer) != 0)
-            {
-                Player player = other.gameObject.GetComponent<Player>();
-                if (player)
-                {
-                    player.TakeDamage(Damage);
-                }
-            }
-        }
-
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (((1 << other.gameObject.layer) & _targetLayer) != 0)
