@@ -49,5 +49,7 @@ namespace Utilities
         {
             return new Vector2(Mathf.CeilToInt(vector.x), Mathf.CeilToInt(vector.y));
         }
+        
+        
     }
 }

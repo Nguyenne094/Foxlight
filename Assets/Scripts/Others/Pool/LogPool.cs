@@ -11,20 +11,20 @@ namespace Bap.Pool
     /// </summary>
     public class LogPool : Pool<Log>
     {
-        public override Log OnCreate()
+        public override Log OnCreateInstance()
         {
             return default;
         }
 
-        public override void Get(Log instance)
+        public override void GetInstance(Log instance)
         {
             instance.gameObject.SetActive(true);
         }
 
-        public override void Release(Log instance)
+        public override void ReleaseInstance(Log instance)
         {
             instance.gameObject.SetActive(false);
-            DOVirtual.DelayedCall(instance.RecreateAfter, () => Get(instance), true);
+            DOVirtual.DelayedCall(instance.RecreateAfter, () => GetInstance(instance), true);
         }
     }
 }

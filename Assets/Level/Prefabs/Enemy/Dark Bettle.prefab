@@ -212,7 +212,7 @@ MonoBehaviour:
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 1
+      m_Bits: 65
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
@@ -239,6 +239,7 @@ MonoBehaviour:
   - rid: 3474963139128721588
   - rid: 3474963144488780668
   - rid: 2718251178391502848
+  - rid: 2718251526387663563
   m_IsInitialised: 0
   m_IsStarted: 0
   references:
@@ -252,6 +253,14 @@ MonoBehaviour:
           m_Value1: 15478795462600107572
         Name: IsAlive
         m_Value: 1
+    - rid: 2718251526387663563
+      type: {class: 'BlackboardVariable`1[[Bap.System.Health.Enemy, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 2112837080089786917
+          m_Value1: 11209053804255596117
+        Name: Enemy Script
+        m_Value: {fileID: 6490712512255045218}
     - rid: 3474963137290568465
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -275,7 +284,7 @@ MonoBehaviour:
           m_Value0: 4719485830489613172
           m_Value1: 1248248296847113846
         Name: DieEvent
-        m_Value: {fileID: 11400000, guid: 890ef77d419a1394eafd9eea0f9b3c41, type: 2}
+        m_Value: {fileID: 11400000, guid: 618d5397021d10e4981ce8969a12d312, type: 2}
     - rid: 3474963137676182250
       type: {class: 'BlackboardVariable`1[[DamgeTakenEvent, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -283,7 +292,7 @@ MonoBehaviour:
           m_Value0: 383393824172720589
           m_Value1: 12275329393817813461
         Name: DamageTakenEvent
-        m_Value: {fileID: 11400000, guid: c7d0a212c12edfe48be54af7c08fa93e, type: 2}
+        m_Value: {fileID: 11400000, guid: 4305daf0f10015640923c03a46fed5e9, type: 2}
     - rid: 3474963139128721588
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -505,13 +514,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbf841ab9bcc43edba64636f08d2a521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHealth: 20
-  _maxHealth: 20
+  _currentHealth: 5
+  _maxHealth: 5
   _isAlive: 1
   _damage: 1
+  _parent: {fileID: 2606678304571748073}
   _targetLayer:
     serializedVersion: 2
     m_Bits: 512
   _isInvincible: 0
-  OnTakeDamage: {fileID: 11400000, guid: c7d0a212c12edfe48be54af7c08fa93e, type: 2}
-  OnDeath: {fileID: 11400000, guid: 890ef77d419a1394eafd9eea0f9b3c41, type: 2}
+  OnTakeDamage: {fileID: 11400000, guid: 4305daf0f10015640923c03a46fed5e9, type: 2}
+  OnDeath: {fileID: 11400000, guid: 618d5397021d10e4981ce8969a12d312, type: 2}

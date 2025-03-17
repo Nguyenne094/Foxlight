@@ -38,14 +38,17 @@ public class SimpleParallaxEffect : MonoBehaviour
 
     private void Update()
     {
-        _parallaxFactor = parallaxFactor;
-        if (_mainCamera.transform.position == lastCameraPosition) return;
-        else
+        if (_subject != null)
         {
-            Vector3 travel = _mainCamera.transform.position - lastCameraPosition;
-            transform.position = new Vector3(transform.position.x + (_applyX ? (travel.x * parallaxFactor) : 0), transform.position.y + (_applyY ? (travel.y * parallaxFactor) : 0), transform.position.z);
+            _parallaxFactor = parallaxFactor;
+            if (_mainCamera.transform.position == lastCameraPosition) return;
+            else
+            {
+                Vector3 travel = _mainCamera.transform.position - lastCameraPosition;
+                transform.position = new Vector3(transform.position.x + (_applyX ? (travel.x * parallaxFactor) : 0), transform.position.y + (_applyY ? (travel.y * parallaxFactor) : 0), transform.position.z);
             
-            lastCameraPosition = _mainCamera.transform.position;
+                lastCameraPosition = _mainCamera.transform.position;
+            }
         }
     }
 }

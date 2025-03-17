@@ -22,7 +22,7 @@ namespace Stuffs
                     ContactPoint2D contact = collision.GetContact(0);
                     if (contact.normal.y > 0)
                     {
-                        enemy.TakeDamage(_damage);
+                        enemy.TakeDamage(_damage, transform);
                         //TODO: Play sfx, vfx like boulder break
                     }
                     

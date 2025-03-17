@@ -5,6 +5,7 @@ using Bap.Pool;
 using Bap.System.Health;
 using DG.Tweening;
 using UnityEngine;
+using Untilities;
 
 namespace Others
 {
@@ -18,13 +19,13 @@ namespace Others
         private float _threshold;
         [SerializeField] private int _damage;
         [SerializeField] private float _recreateAfter;
+
+        private bool _isBroken = false;
         
         private Vector2 _initialPosition;
         private Vector3 _initialRotation;
-        private bool _isTriggered;
         private Rigidbody2D _rb;
         private SpriteRenderer _spriteRenderer;
-        private Collider2D _collider;
 
         public float RecreateAfter => _recreateAfter;
         
@@ -43,7 +44,6 @@ namespace Others
             }
 
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _collider = GetComponent<Collider2D>();
             
             _lever.OnActive += DropLog;
             _initialPosition = transform.position;
@@ -65,31 +65,28 @@ namespace Others
             transform.position = _initialPosition;
             transform.eulerAngles = _initialRotation;
             _spriteRenderer.enabled = true;
+            _isBroken = false;
             _rb.bodyType = RigidbodyType2D.Static;
-            _isTriggered = false;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (_rb.linearVelocityY > -_threshold &&
-                other.gameObject.TryGetComponent<Health>(out Health health))
+            if (((((1 << other.gameObject.layer) & _interactiveLayer.value) != 0)) && !_isBroken)
             {
-                health.TakeDamage(_damage);
-            }
-            if (((((1 << other.gameObject.layer) & _interactiveLayer.value) != 0)) && !_isTriggered)
-            {
+                if(other.gameObject.TryGetComponent<Health>(out Health health))
+                    health.TakeDamage(_damage, transform);
                 ReadyToDisable();
-                _isTriggered = true;
+                _isBroken = true;
+                CameraShake.Instance.LightShake(0.2f);
             }
         }
 
         private void ReadyToDisable()
         {
-            Debug.Log("Collide");
             _spriteRenderer.enabled = false;
             _rb.bodyType = RigidbodyType2D.Static;
             _particleSystem.Play();
-            DOVirtual.DelayedCall(_particleSystem.main.startLifetime.constant, () => _pool.Release(this));
+            DOVirtual.DelayedCall(_particleSystem.main.startLifetime.constant, () => _pool.ReleaseInstance(this));
         }
     }
 }

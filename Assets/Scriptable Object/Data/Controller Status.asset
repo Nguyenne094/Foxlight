@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f900290fe1b4d12b296957ee56af73c, type: 3}
   m_Name: Controller Status
   m_EditorClassIdentifier: 
-  MoveSpeed: 7
+  MoveSpeed: 8
   JumpHeight: 5
   JumpDuration: 0.4
-  MaxFallSpeed: 10
+  MaxFallSpeed: 20
   GroundFilter:
     useTriggers: 0
     useLayerMask: 1
@@ -30,10 +30,5 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  GroundCheckDistance: 1
-  RollForce: 20
-  RollDuration: 0.25
-  RollDelay: 0.7
-  IgnoreLayerWhenDash:
-    serializedVersion: 2
-    m_Bits: 1281
+  GroundCheckDistance: 0.05
+  Roll: {fileID: 0}

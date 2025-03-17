@@ -1,4 +1,5 @@
 ﻿using System;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Others
@@ -9,6 +10,7 @@ namespace Others
     public class Lever : MonoBehaviour
     {
         [SerializeField] private LayerMask _activedByLayer;
+        [SerializeField] private Log _activeLog;
 
         public Action OnActive;
         
@@ -32,6 +34,7 @@ namespace Others
                 {
                     _animator.SetTrigger("Active");
                     OnActive?.Invoke();
+                    DOVirtual.DelayedCall(_activeLog.RecreateAfter, () => _animator.SetTrigger("Return"));
                 }
             }
         }
