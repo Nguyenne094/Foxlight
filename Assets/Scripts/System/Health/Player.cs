@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using Bap.Manager;
 using Bap.Pool;
 using DG.Tweening;
-using Managers;
 using Others;
 using PlatformingGame.Controller;
 using Scriptable_Object.Event;
@@ -9,7 +10,6 @@ using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Pool;
 using UnityEngine.Serialization;
-using Untilities;
 using Utilities;
 using Object = UnityEngine.Object;
 
@@ -17,6 +17,7 @@ namespace Bap.System.Health
 {
     public class Player : Health
     {
+        
         [Header("Events")]
         [SerializeField] private IntEventChannelSO OnTakeDamage;
         [SerializeField] private VoidEventChannelSO OnDeath;
@@ -30,6 +31,7 @@ namespace Bap.System.Health
         [SerializeField] private float _freezeTime;
         
         
+        
         private ObjectPool<ParticleSystem> _deathPSPool;
         private bool _isInvincible = false;
 
@@ -40,7 +42,7 @@ namespace Bap.System.Health
         public bool IsInvincible { get => _isInvincible; set => _isInvincible = value; }
         public bool IsAlive { get => _isAlive; set => _isAlive = value; }
 
-        protected override void Awake() 
+        protected override void Awake()
         {
             base.Awake();
             _rb = GetComponent<Rigidbody2D>();
@@ -65,6 +67,7 @@ namespace Bap.System.Health
                 if (CurrentHealth <= 0)
                 {
                     OnDeath?.RaiseEvent();
+                    GameManger.Instance.OnPlayerDie.Invoke();
                     IsAlive = false;
                     DieEffects();
                 }

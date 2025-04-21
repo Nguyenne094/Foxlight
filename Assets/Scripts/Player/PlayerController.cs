@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Bap.Service_Locator;
 using Bap.System.Health;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,9 +14,9 @@ namespace PlatformingGame.Controller
     {
         [Header("References")]
         [SerializeField] private ControllerStatSO _conStat;
-        [SerializeField] private JoyStick _joyStick;
         
-        [Header("Movement")]
+        [Header("Movement")] 
+        [SerializeField] private bool _canControl;
         [SerializeField] private bool _isMoving = false;
         [SerializeField] private int _moveInput;
 
@@ -35,6 +36,7 @@ namespace PlatformingGame.Controller
         private float _jumpVelocity;
         private bool _canMove = true;
         
+        private JoyStick _joyStick;
         private Rigidbody2D _rb;
         private Collider2D _col;
         private Animator _anim;
@@ -52,6 +54,8 @@ namespace PlatformingGame.Controller
                 Anim.SetBool("CanMove", _canMove);
             }
         }
+
+        public bool CanControl { get => _canControl; set => _canControl = value; }
         public int MoveInput => _moveInput;
         public ControllerStatSO ConStat => _conStat;
         public Player Player => _player;
@@ -67,10 +71,9 @@ namespace PlatformingGame.Controller
             set
             {
                 bool moving = value && _rb.linearVelocityX != 0;
-                
                 if (_isMoving != moving)
                 {
-                    _isMoving = value;
+                    _isMoving = moving;
                     _anim.SetBool(PlayerAnimationString.IsWalking, moving);
                     if (moving)
                     {
@@ -133,6 +136,11 @@ namespace PlatformingGame.Controller
             _conStat.Init(this);
         }
 
+        private void Start()
+        {
+            ServiceLocator.Global.Get(out _joyStick);
+        }
+
         private void Update()
         {
             GroundCheck();
@@ -162,7 +170,7 @@ namespace PlatformingGame.Controller
         {
             _moveInput = _joyStick.GetNormalizedHorizontalMovement();
             
-            IsMoving = _moveInput != 0;
+            IsMoving = (_moveInput != 0) && CanControl;
 
             SetFacingDirection(_moveInput);
         }

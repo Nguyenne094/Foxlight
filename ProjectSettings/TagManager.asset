@@ -19,7 +19,7 @@ TagManager:
   - Enemy Hurt Box
   - Can't Go Through
   - Hazard
-  - 
+  - TriggerScene
   - 
   - 
   - 
@@ -38,14 +38,14 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Obstacle
-    uniqueID: 899141465
-    locked: 0
-  - name: Default
-    uniqueID: 0
+  - name: Background 1
+    uniqueID: 1651465361
     locked: 0
   - name: Background
     uniqueID: 166676489
+    locked: 0
+  - name: Default
+    uniqueID: 0
     locked: 0
   - name: Content
     uniqueID: 3412986289
@@ -58,6 +58,9 @@ TagManager:
     locked: 0
   - name: Forground
     uniqueID: 1865824907
+    locked: 0
+  - name: Foreground 1
+    uniqueID: 1680030793
     locked: 0
   m_RenderingLayers:
   - Default

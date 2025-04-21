@@ -9,6 +9,8 @@ namespace PlatformingGame.Controller
     {
         [SerializeField] private RectTransform _knob;
         [SerializeField] private float _radius;
+        [SerializeField ,Range(0, 1) ,Tooltip("Horizontal value must larger than this value for Player takes input")] 
+        private float xThreshold;
 
         private RectTransform _rect;
         private ETouch.Finger _movementFinger;
@@ -77,7 +79,8 @@ namespace PlatformingGame.Controller
 
         public int GetNormalizedHorizontalMovement()
         {
-            if (_isTouching)
+            //Player is touching and horizontal input value is larger than threshold
+            if (_isTouching && Mathf.Abs(_knob.anchoredPosition.x) > xThreshold * _radius)
             {
                 return (int)Mathf.Sign(_knob.anchoredPosition.x);
             }

@@ -27,8 +27,7 @@ namespace Dialogue
 
         private ETouch.Touch _currentTouch;
         private TMP_Text _text;
-
-        private bool _tapProcessed = false;
+        
         private bool _inDialogue;
         private bool _finishCurrentSpeech;
 
