@@ -15,7 +15,7 @@ using Object = UnityEngine.Object;
         static List<GameObject> tmpSceneGameObjects;
         
         readonly ServiceManager services = new ServiceManager();
-        public List<object> Services => services.Services.ToList();
+        public List<Type> ServiceTypes => services.ServiceTypes;
         
         const string k_globalServiceLocatorName = "ServiceLocator [Global]";
         const string k_sceneServiceLocatorName = "ServiceLocator [Scene]";
@@ -26,6 +26,7 @@ using Object = UnityEngine.Object;
             } else if (global != null) {
                 Debug.LogError("ServiceLocator.ConfigureAsGlobal: Another ServiceLocator is already configured as global", this);
             } else {
+                Debug.Log("ServiceLocator.ConfigureAsGlobal: Configured as global", this);
                 global = this;
                 if (dontDestroyOnLoad) DontDestroyOnLoad(gameObject);
             }
@@ -49,7 +50,7 @@ using Object = UnityEngine.Object;
             get {
                 if (global != null) return global;
 
-                if (FindFirstObjectByType<GlobalBootstrapper>() is { } found) {
+                if (FindAnyObjectByType<GlobalBootstrapper>() is { } found) {
                     found.BootstrapOnDemand();
                     return global;
                 }
@@ -200,6 +201,16 @@ using Object = UnityEngine.Object;
             global = null;
             sceneContainers = new Dictionary<Scene, ServiceLocator>();
             tmpSceneGameObjects = new List<GameObject>();
+        }
+        
+        [ContextMenu("ServiceLocator/List Services")]
+        public void ListServices() {
+            string servicesNames = "";
+            foreach (var service in services.Services)
+            {
+                servicesNames += $"{service.GetType().Name}, ";
+            }
+            Debug.Log($"ServiceLocator.ListServices: {servicesNames}");
         }
 
 #if UNITY_EDITOR

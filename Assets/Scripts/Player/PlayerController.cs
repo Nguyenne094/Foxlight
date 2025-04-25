@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Bap.Service_Locator;
+using Utilities;
 using Bap.System.Health;
+using Bap.Service_Locator;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
-using Utilities;
 
 namespace PlatformingGame.Controller
 {
@@ -135,8 +135,8 @@ namespace PlatformingGame.Controller
             
             _conStat.Init(this);
         }
-
-        private void Start()
+        
+        public void OnSceneGroupLoaded()
         {
             ServiceLocator.Global.Get(out _joyStick);
         }

@@ -5,7 +5,7 @@ using Bap.Pool;
 using DG.Tweening;
 using Others;
 using PlatformingGame.Controller;
-using Scriptable_Object.Event;
+using Bap.EventChannel;
 using Unity.Behavior;
 using UnityEngine;
 using UnityEngine.Pool;

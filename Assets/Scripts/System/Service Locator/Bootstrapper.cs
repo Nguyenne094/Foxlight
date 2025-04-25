@@ -11,14 +11,14 @@ namespace Bap.Service_Locator
         private ServiceLocator container;
         internal ServiceLocator Container => container.OrNull() ?? (container = GetComponent<ServiceLocator>());
 
-        private bool hasbeenBootstrapped;
-
+        private bool hasBeenBootstrapped;
+        
         private void Awake() => BootstrapOnDemand();
 
         public void BootstrapOnDemand()
         {
-            if (hasbeenBootstrapped) return;
-            hasbeenBootstrapped = true;
+            if (hasBeenBootstrapped) return;
+            hasBeenBootstrapped = true;
             Bootstrap();
         }
 

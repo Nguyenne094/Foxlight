@@ -1,5 +1,7 @@
 using System;
+using Bap.Service_Locator;
 using Bap.System.Health;
+using PlatformingGame.Controller;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UIElements;
@@ -7,7 +9,7 @@ using UnityEngine.UIElements;
 public class SimpleParallaxEffect : MonoBehaviour
 {
     [SerializeField] private Camera _mainCamera;
-    [SerializeField] private Transform _subject;
+    [SerializeField] private PlayerController _subject;
     [SerializeField] private bool _applyX = true;
     [SerializeField] private bool _applyY = false;
     [SerializeField] private float _parallaxFactor;
@@ -28,10 +30,7 @@ public class SimpleParallaxEffect : MonoBehaviour
             }
         }
 
-        if (_subject == null)
-        {
-            _subject = FindFirstObjectByType<Player>().transform;
-        }
+        ServiceLocator.Global.Get<PlayerController>(out _subject);
 
         lastCameraPosition = _mainCamera.transform.position;
     }

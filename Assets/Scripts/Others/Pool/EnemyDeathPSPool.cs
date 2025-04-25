@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Bap.Service_Locator;
+using DG.Tweening;
 using UnityEngine;
 using NotImplementedException = System.NotImplementedException;
 
@@ -7,7 +8,6 @@ namespace Bap.Pool
     public class EnemyDeathPSPool : Pool<ParticleSystem>
     {
         [SerializeField] private ParticleSystem _deathPSPrefab;
-        
         
         public override ParticleSystem OnCreateInstance()
         {

@@ -1,11 +1,13 @@
 ﻿using System;
 using Bap.Manager;
+using Bap.Service_Locator;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Bap.UI
 {
+    using SceneManager = UnityEngine.SceneManagement.SceneManager;
     public class Button : MonoBehaviour
     {
         private Animator _anim;
@@ -15,9 +17,21 @@ namespace Bap.UI
             if (_anim == null) _anim = GetComponent<Animator>();
         }
 
-        public void LoadScene(string sceneName)
+        public void LoadScene(SceneGroupDataSO sceneGroup)
         {
-            AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+            if (sceneGroup == null)
+            {
+                Debug.LogError("SceneGroupData is null");
+                return;
+            }
+
+            SceneLoader.Instance.LoadSceneGroup(sceneGroup).ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("Failed to load scene group: " + task.Exception);
+                }
+            });
         }
 
         public void LoadAddictiveSceneAsyncAndTransition(string sceneName)

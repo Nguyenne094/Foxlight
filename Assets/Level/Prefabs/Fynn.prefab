@@ -5152,7 +5152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Persist: 0
   _conStat: {fileID: 11400000, guid: 7e112c3c732dca940a1d3205da3e69d2, type: 2}
-  _canControl: 0
+  _canControl: 1
   _isMoving: 0
   _moveInput: 0
   _onGround: 1

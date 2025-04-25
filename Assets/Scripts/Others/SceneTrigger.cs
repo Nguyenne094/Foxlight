@@ -1,56 +1,53 @@
 ﻿using System;
-using Bap.Manager;
+using Bap.Service_Locator;
 using DG.Tweening;
 using PlatformingGame.Controller;
+using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using Utilities;
-using Vector2 = System.Numerics.Vector2;
 
 
 [RequireComponent(typeof(Collider2D))]
 public class SceneTrigger : MonoBehaviour
 {
-    [SerializeField] private PlayerController _player;
-    [SerializeField] private string _loadingScene;
+    [SerializeField] private SceneGroupDataSO _sceneGroup;
     [SerializeField] private Transform _spawnPos;
-    [SerializeField, Tooltip("While Player spawns at spawn position, then must go to this destination position")] private Transform _destinationPos;
+    [SerializeField, Tooltip("While Player spawns at spawn position, then must go to this destination position")] 
+    private Transform _destinationPos;
     
+    private PlayerController _player;
     private Collider2D _col;
 
     private void Awake()
     {
         _col = GetComponent<Collider2D>();
-        if (_col == null)
-        {
-            Debug.LogError($"Require Collider2D for {gameObject.name} works correctly");
-        }
+    }
 
-        if (_player == null)
-            _player = FindFirstObjectByType<PlayerController>();
+    public void OnSceneGroupLoaded()
+    {
+        ServiceLocator.Global.Get<PlayerController>(out _player);
+        _player.transform.position = _spawnPos.position;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && !SceneManager.GetSceneByName("_loadingScene").isLoaded)
+        if (other.CompareTag("Player") && _sceneGroup != null)
         {
-            AsyncOperation loadOp = new AsyncOperation();
-            AsyncOperation unloadOp = new AsyncOperation();
+            if (_sceneGroup == null)
+            {
+                Debug.LogError("SceneGroupData is null");
+                return;
+            }
 
-            loadOp = SceneManager.LoadSceneAsync(_loadingScene, LoadSceneMode.Additive);
-            unloadOp = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-
-            loadOp.completed += (operation => ForcePlayerMoveToDestination());
+            SceneLoader.Instance.LoadSceneGroup(_sceneGroup).ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    Debug.LogError("Failed to load scene group: " + task.Exception);
+                }
+            });
         }
-    }
-
-    private void ForcePlayerMoveToDestination()
-    {
-        _player.CanControl = false;
-        DOTween.Sequence()
-            .AppendCallback((() =>
-                _player.Rb.linearVelocityX = (Utils.GetDirectionVector2(_spawnPos.position, _destinationPos.position) *
-                                              _player.ConStat.MoveSpeed).x))
-            .AppendCallback((() => _player.CanControl = true));
     }
 }

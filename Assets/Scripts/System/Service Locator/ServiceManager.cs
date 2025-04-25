@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Object = UnityEngine.Object;
 
 namespace Bap.Service_Locator
 {
     public class ServiceManager : MonoBehaviour
     {
         readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
+        public List<Type> ServiceTypes => services.Keys.ToList();
         public IEnumerable<object> Services => services.Values;
 
         public bool TryGet<T>(out T service) where T : class{
