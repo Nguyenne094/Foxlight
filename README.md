@@ -1,7 +1,7 @@
 <h1 align="center"> Foxlight </h1> <br>
 <p align="center">
-  <a href="https://gitpoint.co/">
-    <img alt="Foxlight" title="Foxlight" src="="###">" width="450">
+  <a href="###">
+    <img alt="Foxlight" title="Foxlight" width="450">
   </a>
 </p>
 
@@ -44,7 +44,7 @@ View repository and user information, control your notifications and even manage
 **Available for both iOS and Android.**
 
 <p align="center">
-  <img src = "###" width=350>
+  <img width=350>
 </p>
 
 ## Features
@@ -56,11 +56,11 @@ A few of the features you can do with Foxlight:
 * Feature 3
 
 <p align="center">
-  <img src="="###" width=700>
+  <img width=700>
 </p>
 
 <p align="center">
-  <img src="="###" width=700>
+  <img width=700>
 </p>
 
 ## Feedback
@@ -69,5 +69,5 @@ Feel free to send us feedback on [X](https://x.com/Foxlight) or [file an issue](
 
 ## About Me
 <p align="center">
-  <img alt="About Me" src="="###" width=700>
+  <img alt="About Me" width=700>
 </p>
