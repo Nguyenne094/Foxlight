@@ -66,3 +66,8 @@ A few of the features you can do with Foxlight:
 ## Feedback
 
 Feel free to send us feedback on [X](https://x.com/Foxlight) or [file an issue](https://github.com/Nguyenne094/Foxlight/issues). Feature requests are always welcome. If you wish to contribute, please take a quick look at the [guidelines](./CONTRIBUTING.md)!
+
+## About Me
+<p align="center">
+  <img alt="About Me" src="="###" width=700>
+</p>
