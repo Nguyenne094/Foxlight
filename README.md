@@ -26,7 +26,6 @@
 - [Introduction](#introduction)
 - [Features](#features)
 - [Feedback](#feedback)
-- [Contributors](#contributors)
 - [About Me](#aboutme)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -67,13 +66,3 @@ A few of the features you can do with Foxlight:
 ## Feedback
 
 Feel free to send us feedback on [X](https://x.com/Foxlight) or [file an issue](https://github.com/Nguyenne094/Foxlight/issues). Feature requests are always welcome. If you wish to contribute, please take a quick look at the [guidelines](./CONTRIBUTING.md)!
-
-
-## Contributors
-
-This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification and is brought to you by these [awesome contributors](./CONTRIBUTORS.md).
-
-## About Me
-<p align="center">
-  <img src="="###" width=700>
-</p>
