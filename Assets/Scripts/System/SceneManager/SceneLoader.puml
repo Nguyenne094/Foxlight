@@ -1,0 +1,51 @@
+@startuml
+class Button {
+    +RaiseEvent(VoidEventChannelSO)
+    +LoadScene(SceneGroupDataSO)
+    -LoadPlayerData()
+}
+
+class SceneTrigger {
+    +OnTriggerEnter2D(Collider2D)
+}
+
+class GameManger {
+    +LastCheckPoint : Vector2
+    -SavePlayerData()
+    -OnApplicationQuit()
+}
+
+class PlayerController
+class PlayerHealth
+class SceneLoader {
+    +LoadSceneGroup(SceneGroupDataSO)
+}
+
+class SaveGame {
+    +Save(PlayerData, string)
+    +Load<T>(string) : T
+}
+
+class SceneGroupDataSO
+class VoidEventChannelSO
+class PlayerData {
+    +CurrentPosition : Vector2
+    +LastCheckPoint : Vector2
+    +CurrentHealth : int
+}
+
+Button --> SceneLoader : uses
+Button --> GameManger : updates checkpoint
+Button --> PlayerController : loads data
+Button --> PlayerHealth : loads health
+Button --> SaveGame : loads data
+
+SceneTrigger --> SceneLoader : uses
+SceneTrigger --> PlayerController : checks collision
+
+GameManger --> PlayerController : uses
+GameManger --> PlayerHealth : uses
+GameManger --> SaveGame : saves data
+
+SaveGame --> PlayerData : saves/loads
+@enduml

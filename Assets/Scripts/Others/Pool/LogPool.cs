@@ -1,6 +1,5 @@
 ﻿using System;
 using DG.Tweening;
-using Others;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,7 +12,8 @@ namespace Bap.Pool
     {
         public override Log OnCreateInstance()
         {
-            return default;
+            Debug.LogWarning("No need to create new Log instance anymore");
+            return null;
         }
 
         public override void GetInstance(Log instance)
@@ -25,6 +25,11 @@ namespace Bap.Pool
         {
             instance.gameObject.SetActive(false);
             DOVirtual.DelayedCall(instance.RecreateAfter, () => GetInstance(instance), true);
+        }
+
+        public override void OnDestroyInsance(Log instance)
+        {
+            Debug.LogWarning("You can't destroy Log instace");
         }
     }
 }

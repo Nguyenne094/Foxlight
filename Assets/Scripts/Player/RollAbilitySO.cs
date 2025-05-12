@@ -19,7 +19,7 @@ namespace PlatformingGame.Controller
 
         private Rigidbody2D Rb => _controller.Rb;
         private Animator Anim => _controller.Anim;
-        private Player Player => _controller.Player;
+        private PlayerHealth PlayerHealth => _controller.PlayerHealth;
 
 
         public override void OnStart()
@@ -52,7 +52,7 @@ namespace PlatformingGame.Controller
              StartCoolDown();
              Anim.SetTrigger(PlayerAnimationString.TriggerDash);
              Using = true;
-             Player.IsInvincible = true;
+             PlayerHealth.IsInvincible = true;
         
              //Ignore Layer
              Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Default"), true);
@@ -68,7 +68,7 @@ namespace PlatformingGame.Controller
                  Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Default"), false);
                  Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Enemy Hurt Box"), false);
         
-                 Player.IsInvincible = false;
+                 PlayerHealth.IsInvincible = false;
                  Using = false;
              }, false);
          }

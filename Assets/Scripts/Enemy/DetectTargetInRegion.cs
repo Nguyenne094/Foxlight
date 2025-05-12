@@ -13,7 +13,7 @@ namespace Enemy
         {
             if (!_target)
             {
-                _target = FindFirstObjectByType<Player>().transform;
+                _target = FindFirstObjectByType<PlayerHealth>().transform;
                 if (!_target)
                 {
                     Debug.LogError("Player is not in current scene!!!");

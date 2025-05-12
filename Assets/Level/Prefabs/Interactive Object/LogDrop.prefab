@@ -5206,6 +5206,7 @@ GameObject:
   - component: {fileID: 7806094425328720187}
   - component: {fileID: 7787888619115190955}
   - component: {fileID: 3330736567435713151}
+  - component: {fileID: 7137439631670207371}
   m_Layer: 0
   m_Name: Log
   m_TagString: Untagged
@@ -5398,5 +5399,21 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2624
   _threshold: 2
-  _damage: 10
   _recreateAfter: 2
+--- !u!114 &7137439631670207371
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7589263090929293261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4cdb77dcea4ba395c5aae7137b45d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 768
+  _damage: 5
+  _useTriggerCollider: 0

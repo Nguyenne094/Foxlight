@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Bap.System.Health.Enemy)), CanEditMultipleObjects]
+[CustomEditor(typeof(Bap.System.Health.EnemyHealth)), CanEditMultipleObjects]
 public class EnemyEditor : Editor
 {
     SerializedProperty _isInvincible;

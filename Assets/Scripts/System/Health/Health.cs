@@ -1,20 +1,25 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace Bap.System.Health
 {
-    public abstract class Health: MonoBehaviour 
+    public interface IHealth
+    {
+        public int CurrentHealth { get; set; }
+        public int MaxHealth { get; set; }
+        public bool IsAlive { get; set; }
+
+        public void TakeDamage(int damage, Transform subject);
+    }
+    
+    public abstract class Health: MonoBehaviour, IHealth 
     {
         [Header("Heath Configs")]
         [SerializeField] protected int _currentHealth;
         [SerializeField] protected int _maxHealth;
         [SerializeField] protected bool _isAlive = true;
-        [SerializeField] private int _damage;
-
-
-        public int CurrentHealth {
+        public int CurrentHealth 
+        {
             get
             {
                 return _currentHealth;
@@ -39,13 +44,15 @@ namespace Bap.System.Health
                 else if (_maxHealth > 1000) _maxHealth = 999;
             }
         }
-        public int Damage => _damage;
+        public bool IsAlive { get => _isAlive; set => _isAlive = value; }
 
         protected virtual void Awake()
         {
-            CurrentHealth = MaxHealth;
+            ResetHealth();
         }
 
         public abstract void TakeDamage(int damage, Transform subject);
+        
+        public void ResetHealth() => CurrentHealth = MaxHealth;
     }
 }

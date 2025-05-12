@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Utilities;
+using Bap.DependencyInjection;
 using Bap.System.Health;
 using Bap.Service_Locator;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
+using Utilities;
 
 namespace PlatformingGame.Controller
 {
@@ -40,7 +40,7 @@ namespace PlatformingGame.Controller
         private Rigidbody2D _rb;
         private Collider2D _col;
         private Animator _anim;
-        private Player _player;
+        private PlayerHealth _playerHealth;
         private FacingDirection _facingDirection = FacingDirection.Right;
         
         #region Properties
@@ -58,7 +58,7 @@ namespace PlatformingGame.Controller
         public bool CanControl { get => _canControl; set => _canControl = value; }
         public int MoveInput => _moveInput;
         public ControllerStatSO ConStat => _conStat;
-        public Player Player => _player;
+        public PlayerHealth PlayerHealth => _playerHealth;
         public FacingDirection GetFacingDirection => _facingDirection;
         public Rigidbody2D Rb { get => _rb; set => _rb = value; }
         public Animator Anim { get => _anim; set => _anim = value; }
@@ -77,11 +77,11 @@ namespace PlatformingGame.Controller
                     _anim.SetBool(PlayerAnimationString.IsWalking, moving);
                     if (moving)
                     {
-                        _footstepParticleSystem.Play();
+                        _footstepParticleSystem?.Play();
                     }
                     else
                     {
-                        _footstepParticleSystem.Stop();
+                        _footstepParticleSystem?.Stop();
                     }
                 }
             }
@@ -123,17 +123,18 @@ namespace PlatformingGame.Controller
             Right = 1,
             Left = -1
         }
-        
+
         public override void Awake()
         {
             base.Awake();
-            if(_footstepParticleSystem == null) _footstepParticleSystem = GetComponentInChildren<ParticleSystem>();
-            _player = GetComponent<Player>();
+            _playerHealth = GetComponent<PlayerHealth>();
             _anim = GetComponent<Animator>();
             _col = GetComponent<Collider2D>();
             _rb = GetComponent<Rigidbody2D>();
+            _footstepParticleSystem ??= GetComponentInChildren<ParticleSystem>();
             
             _conStat.Init(this);
+            ComputePhysicsParameters();
         }
         
         public void OnSceneGroupLoaded()
@@ -145,26 +146,22 @@ namespace PlatformingGame.Controller
         {
             GroundCheck();
             Move();
-            ComputePhysicsParameters();
-            RestrictFallingSpeed();
         }
 
         private void FixedUpdate()
         {
             if (CanMove)
             {
-                if (_conStat.Roll != null)
+                if (_conStat.Roll == null || !_conStat.Roll.Using)
                 {
-                    if(!_conStat.Roll.Using)
-                    {
-                        _rb.linearVelocity = new Vector2(MoveInput * _conStat.MoveSpeed, _rb.linearVelocityY);
-                    }
-
-                    return;
+                    _rb.linearVelocity = new Vector2(MoveInput * _conStat.MoveSpeed, _rb.linearVelocityY);
                 }
-                _rb.linearVelocity = new Vector2(MoveInput * _conStat.MoveSpeed, _rb.linearVelocityY);  
             }
+            RestrictFallingSpeed();
         }
+
+        [Provide]
+        public PlayerController ProvideMyself() => this;
         
         public void Move()
         {
@@ -189,8 +186,7 @@ namespace PlatformingGame.Controller
             _computedGravity = (2 * _conStat.JumpHeight) / (_conStat.JumpDuration * _conStat.JumpDuration);
             // Vận tốc ban đầu: v0 = g * jumpDuration = 2 * jumpHeight / jumpDuration
             _jumpVelocity = _computedGravity * _conStat.JumpDuration;
-
-            // Trong Unity, Physics2D.gravity mặc định là (0, -9.81).
+            
             // Để nhân vật có gia tốc trọng lực hiệu dụng gia tốc computedGravity (hướng âm),
             // ta cập nhật gravityScale:
             _rb.gravityScale = _computedGravity / Mathf.Abs(Physics2D.gravity.y);
@@ -238,7 +234,9 @@ namespace PlatformingGame.Controller
             if (_col)
             {
                 Gizmos.color = Color.red;
-                Gizmos.DrawLine(_col.bounds.center + new Vector3(0, -_col.bounds.size.y/2), _col.bounds.center + new Vector3(0, -_col.bounds.size.y/2 - _conStat.GroundCheckDistance));
+                Vector3 start = _col.bounds.center + new Vector3(0, -_col.bounds.size.y / 2);
+                Vector3 end = start + new Vector3(0, -_conStat.GroundCheckDistance);
+                Gizmos.DrawLine(start, end);
             }
         }
     }

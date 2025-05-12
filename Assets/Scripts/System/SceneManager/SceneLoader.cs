@@ -47,6 +47,7 @@ public class SceneLoader : Singleton<SceneLoader>
     /// </summary>
     private async Task ImplementLoadingSceneProgress()
     {
+        await Task.Delay(0);
         // TODO: Implement loading scene progress.
     }
 

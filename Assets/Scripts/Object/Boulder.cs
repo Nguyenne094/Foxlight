@@ -14,7 +14,7 @@ namespace Stuffs
             bool isFalling = GetComponent<Rigidbody2D>().linearVelocityY < 0;
             if (isFalling && 
                 ((1 << collision.gameObject.layer) & _targetLayer) != 0 &&
-                 collision.transform.TryGetComponent<Enemy>(out Enemy enemy))
+                 collision.transform.TryGetComponent<EnemyHealth>(out EnemyHealth enemy))
             {
                 if (enemy != null)
                 {

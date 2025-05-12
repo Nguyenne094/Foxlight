@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
+using UnityEditor;
 
 namespace Bap.Service_Locator
 {
@@ -18,10 +18,12 @@ namespace Bap.Service_Locator
             }
         }
 
-        [MenuItem("GameObject/ServiceLocator/Add Global ServiceStorage")]
-        public static void CreateServiceStorage()
-        {
-            var container = new GameObject("ServiceStorage [Global]", typeof(GlobalServiceStorage));
-        }
+#if UNITY_EDITOR
+        // [MenuItem("GameObject/ServiceLocator/Add Global ServiceStorage")]
+        // public static void CreateServiceStorage()
+        // {
+        //     var container = new GameObject("ServiceStorage [Global]", typeof(GlobalServiceStorage));
+        // }
+#endif
     }
 }

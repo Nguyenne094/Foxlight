@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 840123054623886085}
   - component: {fileID: -5762242225374128969}
   - component: {fileID: -6467896595300683634}
+  - component: {fileID: 8911364988456662413}
   m_Layer: 0
   m_Name: Metal Spike
   m_TagString: Untagged
@@ -168,3 +169,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &8911364988456662413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2043144003231914478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4cdb77dcea4ba395c5aae7137b45d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  _damage: 5
+  _useTriggerCollider: 1

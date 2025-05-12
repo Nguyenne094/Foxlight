@@ -11,24 +11,24 @@ public class SceneGroupManager : MonoBehaviour
     public event Action<string> OnSceneLoaded = delegate {};
     public event Action<string> OnSceneUnloaded = delegate {};
     public VoidEventChannelSO OnSceneGroupLoaded;
+    public VoidEventChannelSO OnSceneGroupUnloaded;
     public SceneGroupDataSO CurrentSceneGroup;
+    public bool SceneGroupLoaded { get; private set; }
 
     private void Awake()
     {
-        OnSceneLoaded += (sceneName) => Debug.Log($"Scene Loaded: {sceneName}");
-        OnSceneUnloaded += (sceneName) => Debug.Log($"Scene Unloaded: {sceneName}");
         OnSceneGroupLoaded.OnEventRaised += () => Debug.Log("Scene Group Loaded");
     }
 
     private void OnDestroy()
     {
-        OnSceneLoaded -= (sceneName) => Debug.Log($"Scene Loaded: {sceneName}");
-        OnSceneUnloaded -= (sceneName) => Debug.Log($"Scene Unloaded: {sceneName}");
         OnSceneGroupLoaded.OnEventRaised -= () => Debug.Log("Scene Group Loaded");
     }
 
     public async Task LoadSceneGroup(SceneGroupDataSO group, IProgress<float> progress)
     {
+        SceneGroupLoaded = false;
+        
         if(group.Scenes.Count <= 0)
         {
             Debug.LogError("No scenes to load in the SceneGroupDataSO.");
@@ -76,9 +76,10 @@ public class SceneGroupManager : MonoBehaviour
         if (operationGroup.IsDone())
         {
             OnSceneGroupLoaded?.RaiseEvent();
+            SceneGroupLoaded = true;
+            CurrentSceneGroup = group;
         }
         
-        CurrentSceneGroup = group;
     }
 
     public async Task UnloadSceneGroup(SceneGroupDataSO groupSceneToLoad)
@@ -104,6 +105,11 @@ public class SceneGroupManager : MonoBehaviour
         while (!operationGroup.IsDone())
         {
             await Task.Yield();
+        }
+        
+        if (operationGroup.IsDone())
+        {
+            OnSceneGroupUnloaded?.RaiseEvent();
         }
     }
 }

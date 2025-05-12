@@ -272,8 +272,9 @@ GameObject:
   - component: {fileID: 4943437329250615287}
   - component: {fileID: 7575448521042312240}
   - component: {fileID: 7269298328867136904}
-  - component: {fileID: 5762298814691134199}
   - component: {fileID: 4489562405634415185}
+  - component: {fileID: 5762298814691134199}
+  - component: {fileID: 1177635225563897125}
   m_Layer: 0
   m_Name: Shadow Owl
   m_TagString: Untagged
@@ -485,9 +486,7 @@ MonoBehaviour:
   - rid: 2718251257352683520
   - rid: 2718251268028236111
   - rid: 2718251268028236112
-  - rid: 2718251268028236344
   - rid: 2718251316790952201
-  - rid: 2718251317946220839
   - rid: 2718251317946220916
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -534,14 +533,6 @@ MonoBehaviour:
           m_Value1: 16464541720607228140
         Name: Move TargetJoint2D Through List
         m_Value: {fileID: 7575448521042312240}
-    - rid: 2718251268028236344
-      type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 16298148590011893376
-          m_Value1: 16746328090950033496
-        Name: Restart
-        m_Value: 0
     - rid: 2718251316790952201
       type: {class: 'BlackboardVariable`1[[UnityEngine.Transform, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -549,14 +540,6 @@ MonoBehaviour:
           m_Value0: 2380720018574086659
           m_Value1: 15168978508076430586
         Name: Initial Position
-        m_Value: {fileID: 1815241064212960350}
-    - rid: 2718251317946220839
-      type: {class: 'BlackboardVariable`1[[UnityEngine.Transform, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 2933733065764561508
-          m_Value1: 5939158820168687969
-        Name: Init Position
         m_Value: {fileID: 1815241064212960350}
     - rid: 2718251317946220916
       type: {class: 'BlackboardVariable`1[[SetTargetJoint2DToPosition, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
@@ -612,28 +595,6 @@ MonoBehaviour:
   _target: {fileID: 0}
   _regions:
   - {fileID: 2918363365801588653}
---- !u!114 &5762298814691134199
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6929110978232823809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf841ab9bcc43edba64636f08d2a521, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _currentHealth: 0
-  _maxHealth: 1
-  _isAlive: 1
-  _damage: 5
-  _targetLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  _isInvincible: 1
-  OnTakeDamage: {fileID: 0}
-  OnDeath: {fileID: 0}
 --- !u!114 &4489562405634415185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,6 +608,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetJoint2D: {fileID: 8284754740226158564}
+--- !u!114 &5762298814691134199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6929110978232823809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbf841ab9bcc43edba64636f08d2a521, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _currentHealth: 0
+  _maxHealth: 5
+  _isAlive: 1
+  _parent: {fileID: 6929110978232823809}
+  _isInvincible: 1
+  OnTakeDamage: {fileID: 0}
+  OnDeath: {fileID: 0}
+--- !u!114 &1177635225563897125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6929110978232823809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4cdb77dcea4ba395c5aae7137b45d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _targetLayer:
+    serializedVersion: 2
+    m_Bits: 768
+  _damage: 2
+  _useTriggerCollider: 1
 --- !u!1 &7108122245810511690
 GameObject:
   m_ObjectHideFlags: 0

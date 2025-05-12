@@ -24,7 +24,7 @@ public class DisappearPlatform : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        Disappear();
+        _=Disappear();
     }
 
     private async Task Disappear()
@@ -33,8 +33,8 @@ public class DisappearPlatform : MonoBehaviour
         await Task.Delay((int)(_lifeTime * 1000));
         //TODO: Play Animation, Sfx, Vfx
         _col.isTrigger = true;
-        _sprite.enabled = false;
-        Reappear();
+        _sprite.enabled = false; 
+        await Reappear();
     }
 
     private async Task Reappear()

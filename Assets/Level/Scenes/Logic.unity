@@ -384,6 +384,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   OnSceneGroupLoaded: {fileID: 11400000, guid: 8578622343e7fed4d966584fc4498cc9, type: 2}
+  OnSceneGroupUnloaded: {fileID: 11400000, guid: c24cba9d89ff3b943a3507cc3890686a, type: 2}
+  CurrentSceneGroup: {fileID: 0}
 --- !u!1 &1013105667
 GameObject:
   m_ObjectHideFlags: 0

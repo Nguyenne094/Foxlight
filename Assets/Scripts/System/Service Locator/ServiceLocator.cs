@@ -113,7 +113,7 @@ using Object = UnityEngine.Object;
         /// <param name="type">The type to use for registration.</param>
         /// <param name="service">The service to register.</param>  
         /// <returns>The ServiceLocator instance after registering the service.</returns>
-        public ServiceLocator Register(Type type, object service) {
+        public ServiceLocator Register(Type type, Object service) {
             services.Register(type, service);
             return this;
         }
@@ -218,7 +218,7 @@ using Object = UnityEngine.Object;
         static void AddGlobal() {
             var go = new GameObject(k_globalServiceLocatorName, typeof(GlobalBootstrapper));
         }
-
+        
         [MenuItem("GameObject/ServiceLocator/Add Scene ServiceLocator")]
         static void AddScene() {
             var go = new GameObject(k_sceneServiceLocatorName, typeof(SceneBootstrapper));

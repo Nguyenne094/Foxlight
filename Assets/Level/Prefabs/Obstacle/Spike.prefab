@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 840123054623886085}
   - component: {fileID: -6467896595300683634}
   - component: {fileID: 5876817667379034973}
-  - component: {fileID: 4577473514038684891}
+  - component: {fileID: -4767121709381011865}
   m_Layer: 13
   m_Name: Spike
   m_TagString: Untagged
@@ -163,7 +163,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 12, y: 2.56}
   m_EdgeRadius: 0
---- !u!114 &4577473514038684891
+--- !u!114 &-4767121709381011865
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,17 +172,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2043144003231914478}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbf841ab9bcc43edba64636f08d2a521, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a4cdb77dcea4ba395c5aae7137b45d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHealth: 0
-  _maxHealth: 99999
-  _isAlive: 1
-  _damage: 1
-  _parent: {fileID: 0}
   _targetLayer:
     serializedVersion: 2
     m_Bits: 512
-  _isInvincible: 1
-  OnTakeDamage: {fileID: 0}
-  OnDeath: {fileID: 0}
+  _damage: 2
+  _useTriggerCollider: 1

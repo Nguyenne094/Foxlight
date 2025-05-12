@@ -240,14 +240,14 @@ MonoBehaviour:
         AuthoringAssetID:
           m_Value0: 6064571278389939780
           m_Value1: 4447498857555344617
-        m_DebugInfo: {fileID: 0}
+        m_DebugInfo: {fileID: -6065678690224199535}
         Root:
           rid: 2718251317946221311
         BlackboardReference:
           rid: 2718251317946221312
         BlackboardGroupReferences: []
-        ProcessedNodes: []
-        m_RunningNodes: []
+        m_ActiveNodes: []
+        m_NodesToTick: []
         m_NodesToEnd:
           rid: 2718251317946221313
         m_EndedNodes:
@@ -266,6 +266,7 @@ MonoBehaviour:
         m_Child:
           rid: 2718251317946221315
         Repeat: 1
+        AllowMultipleRepeatsPerTick: 0
     - rid: 2718251317946221312
       type: {class: BlackboardReference, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -321,6 +322,7 @@ MonoBehaviour:
           rid: 2718251317946221315
         m_Child:
           rid: 2718251317946221328
+        m_AllowMultipleRepeatsPerTick: 0
     - rid: 2718251317946221318
       type: {class: SequenceComposite, ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -854,7 +856,7 @@ MonoBehaviour:
       m_Value1: 14181428205326875264
     Variables: []
     NamedChildren: []
-  - Name: Wait (Range)
+  - Name: Wait (Range) (Seconds)
     Story: Wait between [Min] and [Max] seconds
     RuntimeTypeID:
       m_Value0: 1357124955953561018
@@ -920,7 +922,7 @@ MonoBehaviour:
           PublicKeyToken=b77a5c561934e089
       Tooltip: 
     NamedChildren: []
-  - Name: Wait
+  - Name: Wait (Seconds)
     Story: Wait for [SecondsToWait] seconds
     RuntimeTypeID:
       m_Value0: 7729581452106168333
@@ -1168,6 +1170,7 @@ MonoBehaviour:
   m_MainBlackboardAuthoringAsset: {fileID: 7099637495334152210}
   m_CommandBuffer:
     m_Commands: []
+  m_SubgraphsInfo: []
   references:
     version: 2
     RefIds:
@@ -1191,6 +1194,7 @@ MonoBehaviour:
           m_Value1: 11549843281177505721
         m_FieldValues: []
         Repeat: 1
+        AllowMultipleRepeatsPerTick: 0
     - rid: 2718251233822376179
       type: {class: PortModel, ns: Unity.Behavior.GraphFramework, asm: Unity.Behavior.GraphFramework}
       data:
@@ -1732,6 +1736,7 @@ MonoBehaviour:
           m_Value0: 12917250034115216299
           m_Value1: 14181428205326875264
         m_FieldValues: []
+        AllowMultipleRepeatsPerTick: 0
         <ConditionModels>k__BackingField: []
         <RequiresAllConditionsTrue>k__BackingField: 0
         <ShouldTruncateNodeUI>k__BackingField: 0
@@ -2979,7 +2984,7 @@ MonoBehaviour:
   - rid: 2718251317946220724
   - rid: 2718251317946221127
   - rid: 2718251317946221264
-  m_VersionTimestamp: 638770455119258105
+  m_VersionTimestamp: 638813925745808080
   m_CommandBuffer:
     m_Commands: []
   m_RuntimeBlackboardAsset: {fileID: -6219238424844254785}
@@ -3063,7 +3068,7 @@ MonoBehaviour:
           m_Value0: 6162352309388313622
           m_Value1: 10318483815736896827
         Name: Recognize Clip Length
-        IsExposed: 1
+        IsExposed: 0
         m_IsShared: 0
         m_Value: 0
     - rid: 2718251317946221264
@@ -3073,6 +3078,6 @@ MonoBehaviour:
           m_Value0: 17954761965816958418
           m_Value1: 13448781194005356955
         Name: Return Clip Length
-        IsExposed: 1
+        IsExposed: 0
         m_IsShared: 0
         m_Value: 0

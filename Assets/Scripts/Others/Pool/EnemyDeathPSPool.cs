@@ -1,7 +1,9 @@
-﻿using Bap.Service_Locator;
+﻿using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using NotImplementedException = System.NotImplementedException;
+using Utilities;
+using Object = UnityEngine.Object;
 
 namespace Bap.Pool
 {
@@ -11,20 +13,28 @@ namespace Bap.Pool
         
         public override ParticleSystem OnCreateInstance()
         {
-            return Object.Instantiate(_deathPSPrefab);
+            var particle = Object.Instantiate(_deathPSPrefab);
+            _list.Add(particle);
+            return particle;
         }
 
         public override void GetInstance(ParticleSystem instance)
         {
             instance.gameObject.SetActive(true);
-            instance.Stop();
-            instance.Play();
-            DOVirtual.DelayedCall(instance.main.startLifetime.constant, () => ReleaseInstance(instance));
+            instance?.Stop();
+            instance?.Play();
+            DOVirtual.DelayedCall(instance.main.startLifetime.constant, () => _myPool.Release(instance));
         }
 
         public override void ReleaseInstance(ParticleSystem instance)
         {
             instance.gameObject.SetActive(false);
+        }
+
+        public override void OnDestroyInsance(ParticleSystem instance)
+        {
+            _list.Remove(instance);
+            Destroy(instance.gameObject);
         }
     }
 }

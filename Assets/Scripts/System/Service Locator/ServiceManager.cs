@@ -6,9 +6,9 @@ using Object = UnityEngine.Object;
 
 namespace Bap.Service_Locator
 {
-    public class ServiceManager : MonoBehaviour
+    public class ServiceManager
     {
-        readonly Dictionary<Type, object> services = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object> services = new();
         public List<Type> ServiceTypes => services.Keys.ToList();
         public IEnumerable<object> Services => services.Values;
 

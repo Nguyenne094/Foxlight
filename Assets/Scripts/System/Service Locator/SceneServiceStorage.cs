@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Bap.Service_Locator
 {
     using Object = UnityEngine.Object;
+    
     public class SceneServiceStorage : MonoBehaviour
     {
         [Header("Services")]
@@ -20,10 +21,12 @@ namespace Bap.Service_Locator
             }
         }
 
-        [MenuItem("GameObject/ServiceLocator/Add Scene ServiceStorage")]
-        public static void CreateServiceStorage()
-        {
-            var container = new GameObject("ServiceStorage [Scene]", typeof(SceneServiceStorage));
-        }
+#if UNITY_EDITOR
+        // [MenuItem("GameObject/ServiceLocator/Add Scene ServiceStorage")]
+        // public static void CreateServiceStorage()
+        // {
+        //     var container = new GameObject("ServiceStorage [Scene]", typeof(SceneServiceStorage));
+        // }
+#endif
     }
 }

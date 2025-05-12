@@ -5,32 +5,24 @@ using Unity.Behavior;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
+using UnityEngine.Serialization;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "Enemy Death", story: "On Enemy Death", category: "Enemy", id: "fc571bcbe60a39bf02feda0052c247d7")]
+[NodeDescription(name: "Enemy Death", story: "On Enemy Death", category: "Action", id: "fc571bcbe60a39bf02feda0052c247d7")]
 public partial class EnemyDeathAction : Action
 {
-    [SerializeReference] public BlackboardVariable<Bap.System.Health.Enemy> Enemy;
-
-    private Tween spawnParticleTween;
+    [SerializeReference] public BlackboardVariable<GameObject> Self;
     
     protected override Status OnStart()
     {
-        return Status.Running;
+        var particle = EnemyDeathPSPool.Instance.MyPool.Get();
+        particle.gameObject.transform.position = Self.Value.transform.position;
+        return Status.Success;
     }
 
     protected override Status OnUpdate()
     {
-        var particle = EnemyDeathPSPool.Instance.MyPool.Get();
-        particle.gameObject.transform.position = Enemy.Value.transform.position;
-        spawnParticleTween = DOVirtual.DelayedCall(particle.main.startLifetime.constant, () => { });
         return Status.Success;
-    }
-
-    protected override void OnEnd()
-    {
-        spawnParticleTween.Kill();
-        base.OnEnd();
     }
 }
 

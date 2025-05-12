@@ -5175,7 +5175,6 @@ MonoBehaviour:
   _currentHealth: 0
   _maxHealth: 20
   _isAlive: 1
-  _damage: 1
   OnTakeDamage: {fileID: 11400000, guid: 6ac346b773c59864987959297793d379, type: 2}
   OnDeath: {fileID: 11400000, guid: efea8c96a40d6dd499debb8d9440c951, type: 2}
   _reviveAfter: 0.7
