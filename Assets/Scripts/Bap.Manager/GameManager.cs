@@ -25,26 +25,21 @@ namespace Bap.Manager
                 SaveGame.Instance.Save(new PlayerData(PlayerController.Instance.transform.position, 
                         _lastCheckPoint, 
                         _playerController.GetComponent<PlayerHealth>().CurrentHealth), 
-                    SaveGame.Instance.PlayerDataFileName);
+                    SaveGame.Instance.PlayerDataFileName); 
             }
             else
             {
                 Debug.LogError("PlayerController is null. Cannot save player data.");
             }
-            
-            // if (ServiceLocator.Global.TryGet(out _playerController))
-            // {
-            // }
-            // else
-            // {
-            //     Debug.LogError("Failed to get PlayerController from ServiceLocator.");
-            // }
         }
 
         private void OnApplicationQuit()
         {
             SavePlayerData();
         }
+
+        [Provide]
+        private GameManager Contruct() => this;
 
         [Inject]
         void Inject(PlayerController playerController)

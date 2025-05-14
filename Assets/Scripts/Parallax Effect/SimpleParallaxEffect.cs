@@ -1,4 +1,5 @@
 using System;
+using Bap.DependencyInjection;
 using Bap.Service_Locator;
 using Bap.System.Health;
 using PlatformingGame.Controller;
@@ -9,7 +10,7 @@ using UnityEngine.UIElements;
 public class SimpleParallaxEffect : MonoBehaviour
 {
     [SerializeField] private Camera _mainCamera;
-    [SerializeField] private PlayerController _subject;
+    [SerializeField, Inject] private PlayerController _subject;
     [SerializeField] private bool _applyX = true;
     [SerializeField] private bool _applyY = false;
     [SerializeField] private float _parallaxFactor;
@@ -29,8 +30,6 @@ public class SimpleParallaxEffect : MonoBehaviour
                 Debug.LogError("<color: red>Camera not found</color>");
             }
         }
-
-        ServiceLocator.Global.Get<PlayerController>(out _subject);
 
         lastCameraPosition = _mainCamera.transform.position;
     }

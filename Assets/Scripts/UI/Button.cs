@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Bap.DependencyInjection;
 using Bap.EventChannel;
 using Bap.Manager;
 using Bap.Save;
@@ -15,6 +16,7 @@ namespace Bap.UI
     public class Button : MonoBehaviour
     {
         private Animator _anim;
+        [Inject]
         private PlayerController _playerController;
 
         private void Awake()
@@ -43,19 +45,6 @@ namespace Bap.UI
                 }
             });
             await Task.Yield();
-            LoadPlayerData();
-        }
-        
-        private void LoadPlayerData()
-        {
-            if (ServiceLocator.Global.TryGet(out _playerController))
-            {
-                PlayerData playerData = SaveGame.Instance.Load<PlayerData>(SaveGame.Instance.PlayerDataFileName);
-                
-                _playerController.transform.position = playerData.CurrentPosition;
-                _playerController.GetComponent<PlayerHealth>().CurrentHealth = playerData.CurrentHealth;
-                GameManager.Instance.LastCheckPoint = playerData.LastCheckPoint;
-            }
         }
     }
 }

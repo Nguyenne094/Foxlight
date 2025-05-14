@@ -3,144 +3,268 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Bap.EventChannel;
-using Bap.Manager;
+using UnityEditor;
 using UnityEngine;
+using Scene = UnityEngine.SceneManagement.Scene;
 
 namespace Bap.DependencyInjection {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method)]
     public sealed class InjectAttribute : PropertyAttribute { }
-    
+
     [AttributeUsage(AttributeTargets.Method)]
     public sealed class ProvideAttribute : PropertyAttribute { }
 
-    public class Injector : Singleton<Injector> {
+    public class Injector : MonoBehaviour {
         [SerializeField] private VoidEventChannelSO _onSceneGroupLoaded;
+        [SerializeField] private bool _canOverride;
         
-        const BindingFlags k_bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-        Dictionary<Type, object> _dependencies = new Dictionary<Type, object>();
+        private static Dictionary<Type, object> _dependencyContainer = new();
+        private static Dictionary<Scene, Injector> _sceneContainer = new ();
+        private static string k_globalInjectorName = "Injector [Global]";
+        private static string k_sceneInjectorName = "Injector [Scene]";
+        private const BindingFlags k_BindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
-        public override void Awake()
-        {
-            base.Awake();
-            _onSceneGroupLoaded.OnEventRaised += StartInjection;
+        public bool ValidateOnSceneLoaded { get; set; } = true;
+        
+        private static Injector global;
+        public static Injector Global {
+            get {
+                if (global != null) return global;
+
+                if (FindAnyObjectByType<GlobalInjectorBootstrapper>() is { } found) {
+                    found.BootstrapOnDemand();
+                    return global;
+                }
+                
+                var container = new GameObject(k_globalInjectorName, typeof(Injector));
+                container.AddComponent<GlobalInjectorBootstrapper>().BootstrapOnDemand();
+
+                return global;
+            }
         }
         
+        public void ConfigAsGlobal()
+        {
+            if (global == this) {
+                Debug.LogWarning("[DI] ConfigAsGlobal: Already configured as global", this);
+            } else if (global != null) {
+                Debug.LogError("[DI] ConfigAsGlobal: Another Injector is already configured as global", this);
+            } else {
+                Debug.Log("[DI] ConfigAsGlobal: Configured as global", this);
+                global = this;
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+
+        public void ConfigForScene()
+        {
+            Scene scene = gameObject.scene;
+
+            if (_sceneContainer.ContainsKey(scene)) {
+                Debug.Log($"[DI] ConfigForScene: Already config for {scene.name}. Destroy this Injector");
+                Destroy(this.gameObject);
+                return;
+            }
+            
+            _sceneContainer.Add(scene, this);
+        }
+        
+        public void Awake()
+        {
+            if (_onSceneGroupLoaded != null)
+            {
+                _onSceneGroupLoaded.OnEventRaised += StartInjection;
+            }
+            
+        }
+
         private void OnDestroy()
         {
-            _onSceneGroupLoaded.OnEventRaised -= StartInjection;
+            if (_onSceneGroupLoaded != null)
+            {
+                _onSceneGroupLoaded.OnEventRaised -= StartInjection;
+            }
         }
+
+        #region Injection Processing
 
         private void StartInjection()
         {
-            Debug.Log("[DI] Start injection");
+            ResetStatic();
             var monoBehaviours = GetAllMonoBehaviours();
-
-            foreach (var b in monoBehaviours)
-            {
-                Provides(b);
-            }
-            foreach (var b in monoBehaviours)
-            {
-                InjectsFields(b);
-            }
-            foreach (var b in monoBehaviours)
-            {
-                InjectsMethods(b);
-            }
-        }
-
-        private void Provides(MonoBehaviour behaviour)
-        {
-            var methods = behaviour.GetType().GetMethods(k_bindingFlags).
-                    Where(m => Attribute.IsDefined(m, typeof(ProvideAttribute)));
-
-            foreach (var method in methods)
-            {
-                var returnType = method.ReturnType;
-                var instance = method.Invoke(behaviour, null);
-                if(instance != null && returnType != typeof(void) && !_dependencies.ContainsKey(returnType))
-                {
-                    _dependencies.Add(returnType, instance);
-                    Debug.Log($"[DI] {behaviour.name} provides {returnType.Name}");
-                }
-                else
-                {
-                    Debug.LogError($"[DI] {behaviour.name} cannot provide {returnType.Name}");
-                }
-            }
-        }
-
-        private void InjectsMethods(MonoBehaviour behaviour)
-        {
-            var methods = behaviour.GetType().GetMethods(k_bindingFlags)
-                .Where(m => Attribute.IsDefined(m, typeof(InjectAttribute)));
             
+            foreach (var behaviour in monoBehaviours)
+            {
+                RegisterProvidedDependencies(behaviour);
+            }
+            if(ValidateOnSceneLoaded) Validate();
+
+            foreach (var behaviour in monoBehaviours)
+            {
+                InjectDependencies(behaviour);
+            }
+        }
+        
+        private void InjectDependencies(MonoBehaviour behaviour)
+        {
+            InjectFields(behaviour);
+            InjectMethods(behaviour);
+        }
+
+        public void RegisterProvidedDependencies(MonoBehaviour behaviour)
+        {
+            var methods = behaviour.GetType()
+                .GetMethods(k_BindingFlags)
+                .Where(m => Attribute.IsDefined(m, typeof(ProvideAttribute)));
+
             foreach (var method in methods)
             {
-                Debug.Log(method.Name);
-                var parameterTypes = method.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
-                if (parameterTypes.Length == 0) continue;
-
-                var args = new object[parameterTypes.Length];
-                for (int i = 0; i < parameterTypes.Length; i++)
-                {
-                    var type = parameterTypes[i];
-                    if (_dependencies.TryGetValue(type, out var value))
-                    {
-                        args[i] = value;
-                        Debug.Log($"[DI] {behaviour.name} injects {type.Name}");
-                    }
-                    else
-                    {
-                        Debug.LogError($"[DI] Missing dependency for {type.Name} in {behaviour.name}");
-                    }
-                }
-
-                method.Invoke(behaviour, args);
+                if(method.GetParameters().Length == 0)
+                    RegisterDependency(method, behaviour);
             }
         }
 
-        private void InjectsFields(MonoBehaviour behaviour)
+        private void RegisterDependency(MethodInfo method, MonoBehaviour behaviour)
         {
-            var fields = behaviour.GetType().GetFields(k_bindingFlags)
+            var returnType = method.ReturnType;
+            if (returnType == typeof(void)) return;
+
+            var instance = method.Invoke(behaviour, null);
+            if(instance == null)
+                Debug.LogError($"[DI] {behaviour.name} cannot provide {returnType.Name}. Because instanse is null");
+            
+            if (!_dependencyContainer.ContainsKey(returnType) || _canOverride)
+            {
+                _dependencyContainer[returnType] = instance;
+            }
+        }
+
+        private void InjectFields(MonoBehaviour behaviour)
+        {
+            var fields = behaviour.GetType()
+                .GetFields(k_BindingFlags)
                 .Where(f => Attribute.IsDefined(f, typeof(InjectAttribute)));
 
             foreach (var field in fields)
             {
-                if(field.GetValue(behaviour) != null) continue;
-                if (_dependencies.TryGetValue(field.FieldType, out var value))
+                if (field.GetValue(behaviour) != null) continue;
+
+                var resolvedInstance = ResolveDependency(field.FieldType);
+                if (resolvedInstance != null)
                 {
-                    field.SetValue(behaviour, value);
-                    Debug.Log($"[DI] {behaviour.name} injects {field.FieldType.Name}");
-                }
-                else
-                {
-                    Debug.LogError($"[DI] Missing dependency for {field.FieldType.Name} in {behaviour.name}");
+                    field.SetValue(behaviour, resolvedInstance);
                 }
             }
         }
 
-        private MonoBehaviour[] GetAllMonoBehaviours()
+        public void InjectMethods(MonoBehaviour behaviour)
         {
-            return GameObject.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
+            var methods = behaviour.GetType()
+                .GetMethods(k_BindingFlags)
+                .Where(m => Attribute.IsDefined(m, typeof(InjectAttribute)));
+
+            foreach (var method in methods)
+            {
+                var parameters = method.GetParameters();
+                if (parameters.Length == 0) continue;
+
+                var args = parameters.Select(p => ResolveDependency(p.ParameterType)).ToArray();
+                if (args.All(arg => arg != null))
+                {
+                    method.Invoke(behaviour, args);
+                }
+            }
         }
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        public void ResetStaticField()
+        public object ResolveDependency(Type type)
         {
-            _dependencies.Clear();
+            try
+            {
+                if (_dependencyContainer.TryGetValue(type, out var instance))
+                {
+                    return instance;
+                }
+                else if(global != this)
+                {
+                    return global.ResolveDependency(type);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[DI] Fail to Resolve {type.Name}: {e.Message}", this);
+                throw;
+            }
+
+            return null;
         }
-        
+
+        public MonoBehaviour[] GetAllMonoBehaviours()
+        {
+            if(global == this)
+                return FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
+            return  GetAllMonoBehavioursInScene();
+        }
+
+        public MonoBehaviour[] GetAllMonoBehavioursInScene()
+        {
+            List<MonoBehaviour> monoBehaviours = new();
+            
+            foreach (var go in gameObject.scene.GetRootGameObjects())
+            {
+                monoBehaviours.AddRange(go.GetComponentsInChildren<MonoBehaviour>());
+            }
+
+            return monoBehaviours.ToArray();
+        }
+
+        #endregion
+
+        [ContextMenu("Log Dependencies")]
         public void LogDependencies()
         {
-            if (_dependencies != null)
+            Debug.Log("Logging dependencies:");
+            foreach (var dependency in _dependencyContainer)
             {
-                foreach (var dependency in _dependencies)
-                {
-                    Debug.Log("Logging dependencies:");
-                    Debug.Log($"[DI] {dependency.Key.Name} : {dependency.Value}");
-                }
+                Debug.Log($"[DI] {dependency.Key.Name} : {dependency.Value}");
             }
         }
+        
+        /// <summary>
+        /// Check for missing dependencies, throw exception
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        public void Validate()
+        {
+            foreach (var dependency in _dependencyContainer)
+            {
+                if (dependency.Value == null || dependency.Value.GetType() != dependency.Key)
+                {
+                    throw new Exception($"[DI] Exception: Invalid dependency {dependency.Key} for {dependency.Value.GetType().Name}");
+                }
+            }
+
+            Debug.Log("[DI] Validate Done! No missing dependency");
+        }
+        
+        static void ResetStatic()
+        {
+            _dependencyContainer.Clear();
+            _sceneContainer.Clear();
+            global = null;
+        }
+
+#if UNITY_EDITOR
+        [MenuItem("GameObject/Dependency Injector/Add Global Injector")]
+        public static void CreateGlobalInjector()
+        {
+            var injector = new GameObject(k_globalInjectorName).AddComponent<GlobalInjectorBootstrapper>();
+        }
+
+        [MenuItem("GameObject/Dependency Injector/Add Scene Injector")]
+        public static void CreateSceneInjector()
+        {
+            var injector = new GameObject(k_sceneInjectorName).AddComponent<SceneInjectorBootstrapper>();
+        }
+#endif
     }
 }

@@ -11,7 +11,6 @@ namespace Bap.Service_Locator
         
         private void Awake()
         {
-            Debug.Log("ServiceStorage: Start registering services for global");
             foreach (var service in _services)
             {
                 ServiceLocator.Global.Register(service.GetType(), service);

@@ -1,4 +1,5 @@
 ﻿using System;
+using Bap.DependencyInjection;
 using Bap.Service_Locator;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,6 +18,8 @@ namespace PlatformingGame.Controller
         private ETouch.Finger _movementFinger;
         private bool _isTouching = false;
 
+        [Provide] private JoyStick Construct() => this;
+        
         private void Awake()
         {
             _rect = GetComponent<RectTransform>();

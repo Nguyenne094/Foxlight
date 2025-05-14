@@ -49,11 +49,6 @@ namespace Bap.Save
             _savePath = Application.persistentDataPath + Path.DirectorySeparatorChar;
         }
 
-        private void Start()
-        {
-            Load<PlayerData>(PlayerDataFileName);
-        }
-
         public string Serialize<IData>(IData data, string fileName, bool overwrite) where IData : Save.IData
         {
             string saveFile = CombineWithPath(fileName);

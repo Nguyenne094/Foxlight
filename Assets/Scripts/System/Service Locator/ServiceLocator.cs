@@ -11,22 +11,21 @@ namespace Bap.Service_Locator {
 using Object = UnityEngine.Object;
     public class ServiceLocator : MonoBehaviour {
         static ServiceLocator global;
-        static Dictionary<Scene, ServiceLocator> sceneContainers;
-        static List<GameObject> tmpSceneGameObjects;
+        static Dictionary<Scene, ServiceLocator> sceneContainers = new();
+        static List<GameObject> tmpSceneGameObjects = new();
         
         readonly ServiceManager services = new ServiceManager();
-        public List<Type> ServiceTypes => services.ServiceTypes;
         
         const string k_globalServiceLocatorName = "ServiceLocator [Global]";
         const string k_sceneServiceLocatorName = "ServiceLocator [Scene]";
 
         internal void ConfigureAsGlobal(bool dontDestroyOnLoad) {
             if (global == this) {
-                Debug.LogWarning("ServiceLocator.ConfigureAsGlobal: Already configured as global", this);
+                Debug.LogWarning("[ServiceLocator] ConfigureAsGlobal: Already configured as global", this);
             } else if (global != null) {
-                Debug.LogError("ServiceLocator.ConfigureAsGlobal: Another ServiceLocator is already configured as global", this);
+                Debug.LogError("[ServiceLocator] ConfigureAsGlobal: Another ServiceLocator is already configured as global", this);
             } else {
-                Debug.Log("ServiceLocator.ConfigureAsGlobal: Configured as global", this);
+                Debug.Log("[ServiceLocator] ConfigureAsGlobal: Configured as global", this);
                 global = this;
                 if (dontDestroyOnLoad) DontDestroyOnLoad(gameObject);
             }
@@ -36,7 +35,7 @@ using Object = UnityEngine.Object;
             Scene scene = gameObject.scene;
 
             if (sceneContainers.ContainsKey(scene)) {
-                Debug.LogError("ServiceLocator.ConfigureForScene: Another ServiceLocator is already configured for this scene", this);
+                Debug.LogError("[ServiceLocator] ConfigureForScene: Another ServiceLocator is already configured for this scene", this);
                 return;
             }
             
@@ -50,13 +49,13 @@ using Object = UnityEngine.Object;
             get {
                 if (global != null) return global;
 
-                if (FindAnyObjectByType<GlobalBootstrapper>() is { } found) {
+                if (FindAnyObjectByType<GlobalServiceBootstrapper>() is { } found) {
                     found.BootstrapOnDemand();
                     return global;
                 }
                 
                 var container = new GameObject(k_globalServiceLocatorName, typeof(ServiceLocator));
-                container.AddComponent<GlobalBootstrapper>().BootstrapOnDemand();
+                container.AddComponent<GlobalServiceBootstrapper>().BootstrapOnDemand();
 
                 return global;
             }
@@ -75,8 +74,8 @@ using Object = UnityEngine.Object;
             tmpSceneGameObjects.Clear();
             scene.GetRootGameObjects(tmpSceneGameObjects);
 
-            foreach (GameObject go in tmpSceneGameObjects.Where(go => go.GetComponent<SceneBootstrapper>() != null)) {
-                if (go.TryGetComponent(out SceneBootstrapper bootstrapper) && bootstrapper.Container != mb) {
+            foreach (GameObject go in tmpSceneGameObjects.Where(go => go.GetComponent<SceneServiceBootstrapper>() != null)) {
+                if (go.TryGetComponent(out SceneServiceBootstrapper bootstrapper) && bootstrapper.Container != mb) {
                     bootstrapper.BootstrapOnDemand();
                     return bootstrapper.Container;
                 }
@@ -87,7 +86,7 @@ using Object = UnityEngine.Object;
 
         /// <summary>
         /// Gets the closest ServiceLocator instance to the provided 
-        /// MonoBehaviour in hierarchy, the ServiceLocator for its scene, or the global ServiceLocator.
+        /// MonoBehaviour in hierarchy, the ServiceLocator for its scene, or the global [ServiceLocator] 
         /// </summary>
         public static ServiceLocator For(MonoBehaviour mb)
         {
@@ -132,7 +131,7 @@ using Object = UnityEngine.Object;
                 return this;
             }
             
-            throw new ArgumentException($"ServiceLocator.Get: Service of type {typeof(T).FullName} not registered");
+            throw new ArgumentException($"[ServiceLocator] Get: Service of type {typeof(T).FullName} not registered");
         }
 
         /// <summary>
@@ -150,7 +149,7 @@ using Object = UnityEngine.Object;
             if (TryGetNextInHierarchy(out ServiceLocator container))
                 return container.Get<T>();
 
-            throw new ArgumentException($"Could not resolve type '{typeof(T).FullName}'.");
+            throw new ArgumentException($"[ServiceLocator] Could not resolve type '{typeof(T).FullName}'.");
         }
         
         /// <summary>
@@ -199,8 +198,8 @@ using Object = UnityEngine.Object;
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatics() {
             global = null;
-            sceneContainers = new Dictionary<Scene, ServiceLocator>();
-            tmpSceneGameObjects = new List<GameObject>();
+            sceneContainers.Clear();
+            tmpSceneGameObjects.Clear();
         }
         
         [ContextMenu("ServiceLocator/List Services")]
@@ -210,18 +209,18 @@ using Object = UnityEngine.Object;
             {
                 servicesNames += $"{service.GetType().Name}, ";
             }
-            Debug.Log($"ServiceLocator.ListServices: {servicesNames}");
+            Debug.Log($"[ServiceLocator] ListServices: {servicesNames}");
         }
 
 #if UNITY_EDITOR
         [MenuItem("GameObject/ServiceLocator/Add Global ServiceLocator")]
         static void AddGlobal() {
-            var go = new GameObject(k_globalServiceLocatorName, typeof(GlobalBootstrapper));
+            var go = new GameObject(k_globalServiceLocatorName, typeof(GlobalServiceBootstrapper));
         }
         
         [MenuItem("GameObject/ServiceLocator/Add Scene ServiceLocator")]
         static void AddScene() {
-            var go = new GameObject(k_sceneServiceLocatorName, typeof(SceneBootstrapper));
+            var go = new GameObject(k_sceneServiceLocatorName, typeof(SceneServiceBootstrapper));
         }
 #endif
     }

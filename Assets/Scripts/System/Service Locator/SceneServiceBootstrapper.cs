@@ -1,6 +1,6 @@
 ﻿namespace Bap.Service_Locator
 {
-    public class SceneBootstrapper : Bootstrapper
+    public class SceneServiceBootstrapper : Bootstrapper
     {
         public override void Bootstrap()
         {

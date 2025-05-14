@@ -3,9 +3,10 @@ guid: e9a6db85101c4effb7658160d72e0f31
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _onSceneGroupLoaded: {fileID: 11400000, guid: 8578622343e7fed4d966584fc4498cc9, type: 2}
   executionOrder: 0
-  icon: {fileID: 2800000, guid: b7b0be3889ceb1c4197f34e0e0e76788, type: 3}
+  icon: {fileID: 2800000, guid: fa876ec6bedfe8f42bd5ee4264f14ce6, type: 3}
   userData: 
   assetBundleName: 
   assetBundleVariant: 

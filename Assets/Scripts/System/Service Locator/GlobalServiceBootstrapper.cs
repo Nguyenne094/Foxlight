@@ -2,7 +2,7 @@
 
 namespace Bap.Service_Locator
 {
-    public class GlobalBootstrapper : Bootstrapper
+    public class GlobalServiceBootstrapper : Bootstrapper
     {
         [SerializeField] bool donDestroyOnLoad;
         

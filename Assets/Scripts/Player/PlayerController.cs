@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Bap.DependencyInjection;
+using Bap.Manager;
+using Bap.Save;
 using Bap.System.Health;
 using Bap.Service_Locator;
 using UnityEngine;
@@ -36,7 +38,7 @@ namespace PlatformingGame.Controller
         private float _jumpVelocity;
         private bool _canMove = true;
         
-        private JoyStick _joyStick;
+        [Inject] private JoyStick _joyStick;
         private Rigidbody2D _rb;
         private Collider2D _col;
         private Animator _anim;
@@ -134,12 +136,8 @@ namespace PlatformingGame.Controller
             _footstepParticleSystem ??= GetComponentInChildren<ParticleSystem>();
             
             _conStat.Init(this);
+            LoadPlayerData();
             ComputePhysicsParameters();
-        }
-        
-        public void OnSceneGroupLoaded()
-        {
-            ServiceLocator.Global.Get(out _joyStick);
         }
 
         private void Update()
@@ -163,9 +161,19 @@ namespace PlatformingGame.Controller
         [Provide]
         public PlayerController ProvideMyself() => this;
         
+        
+        private void LoadPlayerData()
+        {
+            PlayerData playerData = SaveGame.Instance.Load<PlayerData>(SaveGame.Instance.PlayerDataFileName);
+            
+            transform.position = playerData.CurrentPosition;
+            _playerHealth.CurrentHealth = playerData.CurrentHealth;
+            GameManager.Instance.LastCheckPoint = playerData.LastCheckPoint;
+        }
+        
         public void Move()
         {
-            _moveInput = _joyStick.GetNormalizedHorizontalMovement();
+            _moveInput = _joyStick?.GetNormalizedHorizontalMovement() ?? 0;
             
             IsMoving = (_moveInput != 0) && CanControl;
 

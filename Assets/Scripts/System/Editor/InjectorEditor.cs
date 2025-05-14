@@ -11,10 +11,23 @@ namespace Bap.DependencyInjection
         {
             DrawDefaultInspector();
             var injector = (Injector)target;
-            
-            if(GUILayout.Button("Log Dependencies"))
+
+            injector.ValidateOnSceneLoaded = GUILayout.Toggle(injector.ValidateOnSceneLoaded, "Validate On Scene Group Loaded");
+
+            GUILayout.Space(20);
+
+            if (GUILayout.Button("Validate"))
             {
-                injector.LogDependencies();
+                injector.Validate();
+            }
+
+            if (GUILayout.Button("Set Up"))
+            {   
+                var monoBehaviours = injector.GetAllMonoBehaviours();
+                foreach (var b in monoBehaviours)
+                {
+                    injector.RegisterProvidedDependencies(b);
+                }
             }
         }
     }

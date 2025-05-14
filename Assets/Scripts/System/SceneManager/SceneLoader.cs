@@ -28,7 +28,7 @@ public class SceneLoader : Singleton<SceneLoader>
 
         if (data == null)
         {
-            Debug.LogError("SceneGroupData is null");
+            Debug.LogError("[Scene Manager] Error: SceneGroupData is null");
             return;
         }
 
