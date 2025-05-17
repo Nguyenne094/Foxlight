@@ -26,6 +26,7 @@ namespace Bap.DependencyInjection
                 var monoBehaviours = injector.GetAllMonoBehaviours();
                 foreach (var b in monoBehaviours)
                 {
+                    Debug.Log(b.GetType().Name);
                     injector.RegisterProvidedDependencies(b);
                 }
             }

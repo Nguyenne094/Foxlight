@@ -14,4 +14,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CoolDownDuration: 0.5
   RollForce: 15
-  RollTime: 0.5

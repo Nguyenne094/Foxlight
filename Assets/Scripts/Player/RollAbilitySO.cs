@@ -14,63 +14,39 @@ namespace PlatformingGame.Controller
     public class RollAbilitySO : PlayerAbilityScriptableObject
     {
         [Header("Rolling Configs")]
-        [Min(0.1f)] public float RollForce = 5f;
-        [Min(0.1f)] public float RollTime = 0.1f;
+        [Min(0.1f), SerializeField] private float RollForce = 5f;
 
         private Rigidbody2D Rb => _controller.Rb;
         private Animator Anim => _controller.Anim;
         private PlayerHealth PlayerHealth => _controller.PlayerHealth;
 
 
-        public override void OnStart()
+        protected override void Action()
         {
-            
-        }
+            StartCoolDown();
+            Anim.SetTrigger(PlayerAnimationString.TriggerDash);
+            PlayerHealth.IsInvincible = true;
 
-        public override void OnUpdate()
-        {
-            
-        }
+            // Ignore Layer
+            Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Default"), true);
+            Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Enemy Hurt Box"), true);
 
-        public override void OnFixedUpdate()
-        {
+            float dashSpeed = Mathf.Sign((int)_controller.FacingDirection) * RollForce;
+            Rb.linearVelocity = new Vector2(0, _controller.Rb.linearVelocityY);
             
-        }
-
-        public override void Active()
-        {
-            if (!Using && CanUse)
+            DOVirtual.Float(0, 1, CoolDownDuration, value =>
             {
-                Roll();
-            }
+                Debug.Log("Rolling");
+                // Áp dụng vận tốc Dash trong suốt thời gian RollDuration
+                Rb.linearVelocity = new Vector2(dashSpeed, _controller.Rb.linearVelocity.y);
+            }).OnComplete(() =>
+            {
+                Debug.Log("Reset");
+                Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Default"), false);
+                Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Enemy Hurt Box"), false);
+                PlayerHealth.IsInvincible = false;
+                Rb.linearVelocity = new Vector2(0, _controller.Rb.linearVelocityY);
+            });
         }
-
-        public override void Restart() { }
-
-         private void Roll()
-         {
-             StartCoolDown();
-             Anim.SetTrigger(PlayerAnimationString.TriggerDash);
-             Using = true;
-             PlayerHealth.IsInvincible = true;
-        
-             //Ignore Layer
-             Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Default"), true);
-             Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Enemy Hurt Box"), true);
-        
-             float dashSpeed = (int)_controller.GetFacingDirection * RollForce;
-             Rb.linearVelocity = new Vector2(0, _controller.Rb.linearVelocityY);
-             Rb.linearVelocity = new Vector2(dashSpeed, _controller.Rb.linearVelocity.y);
-        
-             DOVirtual.DelayedCall(RollTime, () =>
-             {
-                 //Resest Ignore Layer
-                 Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Default"), false);
-                 Physics2D.IgnoreLayerCollision(_controller.gameObject.layer, LayerMask.NameToLayer("Enemy Hurt Box"), false);
-        
-                 PlayerHealth.IsInvincible = false;
-                 Using = false;
-             }, false);
-         }
     }
 }

@@ -27,21 +27,6 @@ namespace Bap.DependencyInjection {
         public bool ValidateOnSceneLoaded { get; set; } = true;
         
         private static Injector global;
-        public static Injector Global {
-            get {
-                if (global != null) return global;
-
-                if (FindAnyObjectByType<GlobalInjectorBootstrapper>() is { } found) {
-                    found.BootstrapOnDemand();
-                    return global;
-                }
-                
-                var container = new GameObject(k_globalInjectorName, typeof(Injector));
-                container.AddComponent<GlobalInjectorBootstrapper>().BootstrapOnDemand();
-
-                return global;
-            }
-        }
         
         public void ConfigAsGlobal()
         {
@@ -75,7 +60,6 @@ namespace Bap.DependencyInjection {
             {
                 _onSceneGroupLoaded.OnEventRaised += StartInjection;
             }
-            
         }
 
         private void OnDestroy()
@@ -88,9 +72,9 @@ namespace Bap.DependencyInjection {
 
         #region Injection Processing
 
-        private void StartInjection()
-        {
-            ResetStatic();
+        private void StartInjection(){
+            _dependencyContainer.Clear();
+            _sceneContainer.Clear();
             var monoBehaviours = GetAllMonoBehaviours();
             
             foreach (var behaviour in monoBehaviours)
@@ -200,8 +184,9 @@ namespace Bap.DependencyInjection {
 
         public MonoBehaviour[] GetAllMonoBehaviours()
         {
-            if(global == this)
-                return FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
+            Debug.Log(global.gameObject.name);
+            if (global == this)
+                return FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.InstanceID);
             return  GetAllMonoBehavioursInScene();
         }
 
@@ -246,6 +231,7 @@ namespace Bap.DependencyInjection {
             Debug.Log("[DI] Validate Done! No missing dependency");
         }
         
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void ResetStatic()
         {
             _dependencyContainer.Clear();

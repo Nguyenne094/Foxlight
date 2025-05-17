@@ -31,4 +31,4 @@ MonoBehaviour:
     minNormalAngle: 0
     maxNormalAngle: 0
   GroundCheckDistance: 0.05
-  Roll: {fileID: 0}
+  Roll: {fileID: 11400000, guid: 2d376f71fcc4a604db761128ba621504, type: 2}

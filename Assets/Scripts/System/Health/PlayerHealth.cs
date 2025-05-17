@@ -5,6 +5,7 @@ using PlatformingGame.Controller;
 using Bap.EventChannel;
 using Bap.Manager;
 using Bap.Pool;
+using Bap.State_Machine;
 using UnityEngine.Serialization;
 using UnityEngine.Pool;
 using UnityEngine;
@@ -82,12 +83,12 @@ namespace Bap.System.Health
         private void TakeDamageEffects(Transform subject)
         {
             IsInvincible = true;
-            PlayerController.Instance.CanMove = false;
+            PlayerContext.Instance.CanMove = false;
 
             var dir = Utils.GetDirectionVector2(subject.position, transform.position);
             _rb.linearVelocity = Vector2.zero;
             _rb.linearVelocity = Vector2.one * dir * _pushForce;
-            DOVirtual.DelayedCall(0.5f, () => PlayerController.Instance.CanMove = true, false);
+            DOVirtual.DelayedCall(0.5f, () => PlayerContext.Instance.CanMove = true, false);
             
             //!!! IMPORTANT !!! If Player stays in a enemy object and not moves, OnTriggerStay will not work
             

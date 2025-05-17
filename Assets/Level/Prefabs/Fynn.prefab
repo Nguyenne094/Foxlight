@@ -4849,6 +4849,9 @@ GameObject:
   - component: {fileID: 660307649113877462}
   - component: {fileID: 1070571550969119820}
   - component: {fileID: 6720268081683883933}
+  - component: {fileID: 4464778965950898359}
+  - component: {fileID: 5928041314024083427}
+  - component: {fileID: 4447251469876903226}
   m_Layer: 9
   m_Name: Fynn
   m_TagString: Player
@@ -5031,8 +5034,8 @@ MonoBehaviour:
     m_ActionName: 'Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1070571550969119820}
-        m_TargetAssemblyTypeName: PlatformingGame.Controller.PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 5928041314024083427}
+        m_TargetAssemblyTypeName: Bap.State_Machine.PlayerContext, Assembly-CSharp
         m_MethodName: Jump
         m_Mode: 0
         m_Arguments:
@@ -5097,8 +5100,8 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1070571550969119820}
-        m_TargetAssemblyTypeName: PlatformingGame.Controller.PlayerController, Assembly-CSharp
+      - m_Target: {fileID: 5928041314024083427}
+        m_TargetAssemblyTypeName: Bap.State_Machine.PlayerContext, Assembly-CSharp
         m_MethodName: Roll
         m_Mode: 0
         m_Arguments:
@@ -5152,14 +5155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Persist: 0
   _conStat: {fileID: 11400000, guid: 7e112c3c732dca940a1d3205da3e69d2, type: 2}
-  _canControl: 1
-  _isMoving: 0
-  _moveInput: 0
-  _onGround: 1
-  _isJumping: 0
-  _isFalling: 0
-  _yVelocityDirection: 0
-  _footstepParticleSystem: {fileID: 6402424868649177838}
+  _col: {fileID: 0}
 --- !u!114 &6720268081683883933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5183,3 +5179,76 @@ MonoBehaviour:
   _flashTimes: 3
   _flashColor: {r: 1, g: 0, b: 0, a: 0.003921569}
   _freezeTime: 0.1
+--- !u!114 &4464778965950898359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5533316025370740340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fcdccac37cf4811907084b821986fdc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EventChannel: {fileID: 11400000, guid: 8578622343e7fed4d966584fc4498cc9, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1070571550969119820}
+        m_TargetAssemblyTypeName: PlatformingGame.Controller.PlayerController, Assembly-CSharp
+        m_MethodName: OnSceneGroupLoaded
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  _Delay: 0
+--- !u!114 &5928041314024083427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5533316025370740340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e278c32996a91f47b62ebb81b3b741e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Persist: 1
+  StateList: []
+  CurrentStateView: 
+  CurrentSubStateView: 
+  _stateFactory: {fileID: 4447251469876903226}
+  _controllerStatSo: {fileID: 11400000, guid: 7e112c3c732dca940a1d3205da3e69d2, type: 2}
+  _col: {fileID: 367475918456621014}
+  _rb: {fileID: 6622903606929363634}
+  _anim: {fileID: 660307649113877462}
+  _playerHealth: {fileID: 6720268081683883933}
+  _canControl: 1
+  _canMove: 1
+  _isMoving: 0
+  _moveInput: 0
+  _onGround: 1
+  _isJumping: 0
+  _isFalling: 0
+  _yVelocityDirection: 0
+  _footstepParticleSystem: {fileID: 6402424868649177838}
+--- !u!114 &4447251469876903226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5533316025370740340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be5dfb6f9fc548af873783130012f093, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ctx: {fileID: 5928041314024083427}

@@ -171,63 +171,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fynn
       objectReference: {fileID: 0}
-    - target: {fileID: 5533316025370740340, guid: 2efdea0339f2ffa4ca32a626b2b09f52, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5533316025370740340, guid: 2efdea0339f2ffa4ca32a626b2b09f52, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 180785388}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2efdea0339f2ffa4ca32a626b2b09f52, type: 3}
---- !u!1 &180785386 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5533316025370740340, guid: 2efdea0339f2ffa4ca32a626b2b09f52, type: 3}
-  m_PrefabInstance: {fileID: 180785385}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &180785387 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1070571550969119820, guid: 2efdea0339f2ffa4ca32a626b2b09f52, type: 3}
   m_PrefabInstance: {fileID: 180785385}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180785386}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2fd5ed240d91e549be3ed4219d5ae5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &180785388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180785386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8fcdccac37cf4811907084b821986fdc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EventChannel: {fileID: 11400000, guid: 8578622343e7fed4d966584fc4498cc9, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 180785387}
-        m_TargetAssemblyTypeName: PlatformingGame.Controller.PlayerController, Assembly-CSharp
-        m_MethodName: OnSceneGroupLoaded
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  _Delay: 0
 --- !u!4 &180785389 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3294549952780284187, guid: 2efdea0339f2ffa4ca32a626b2b09f52, type: 3}

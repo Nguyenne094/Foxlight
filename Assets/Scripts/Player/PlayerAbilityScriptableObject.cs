@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Bap.State_Machine;
+using DG.Tweening;
 using UnityEngine;
 
 namespace PlatformingGame.Controller
@@ -9,28 +10,36 @@ namespace PlatformingGame.Controller
         public float CoolDownDuration;
 
         //No SerializeField here, as this is set in code.
-        protected PlayerController _controller;
-        public bool CanUse { get; protected set; } = true; // Initialize to true
-        public bool Using { get; protected set; } = false; // Added public getter
+        protected PlayerContext _controller;
+        public bool CanUse { get; protected set; } = true;
+        public bool Using { get; protected set; } = false;
 
-        public virtual void Init(PlayerController controller)
+        public virtual void Init(PlayerContext controller)
         {
             _controller = controller;
-            OnStart();
         }
 
-        public abstract void OnStart();
-        public abstract void OnUpdate();
-        public abstract void OnFixedUpdate();
-        public virtual void OnExit() { Restart(); }
-        public abstract void Active();
+        protected abstract void Action();
 
-        public abstract void Restart();
+        public void Active()
+        {
+            if (!Using && CanUse)
+            {
+                Action();
+            }
+        }
+
+        public virtual void Restart(){}
 
         protected void StartCoolDown()
         {
+            Using = true;
             CanUse = false;
-            DOVirtual.DelayedCall(CoolDownDuration, () => CanUse = true);
+            DOVirtual.DelayedCall(CoolDownDuration, () =>
+            {
+                CanUse = true;
+                Using = false;
+            });
         }
     }
 }

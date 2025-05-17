@@ -1,4 +1,5 @@
 ﻿using System;
+using Bap.State_Machine;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -21,7 +22,7 @@ namespace PlatformingGame.Controller
         [Header("Abilities")] 
         public PlayerAbilityScriptableObject Roll;
 
-        public void Init(PlayerController controller)
+        public void Init(PlayerContext controller)
         {
             if(Roll != null)
                 Roll.Init(controller);
